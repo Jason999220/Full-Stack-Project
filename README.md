@@ -17,13 +17,13 @@
 
 2. 複製【.env.example】名稱改為【.env】修改設定檔
 
-   > Linux
+   #### Linux
 
    ```
    cp .env.example .env
    ```
 
-   > Windows
+   #### Windows
 
    ```
    copy .env.example .env
@@ -80,3 +80,13 @@
 ## Storage 檔案儲存
 
 先將有儲存到 storage/app 底下的檔案都 cope 一份到 public/files
+
+## Module not found 錯誤
+
+![messageImage_1690803651946](https://github.com/Jason999220/Full-Stack-Project/assets/36446806/0a0d253b-850e-4361-85f3-fbf54c8e9671)
+
+上圖的錯誤，是因為其他組員使用 npm 安裝了新套件，但 pull 並不會在你本地 client/node_module 中一同安裝( gitignore 的關係)，所以需要於終端機在 client 資料夾路徑下輸入以下指令進行安裝
+
+```
+ npm install
+```

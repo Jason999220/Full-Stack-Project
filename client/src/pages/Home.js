@@ -1,9 +1,12 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import "./home.css";
 import { Link } from "react-router-dom";
 import Case from "../axios/Case";
 
 function Home() {
+  const [arr, setArr] = useState({ A: "a", B: "b", C: "c" });
+  console.log(arr);
+
   // 進到home就取得並放入localstorage，【AllCase】使用
   // 母類別
   Case.getCategorys()

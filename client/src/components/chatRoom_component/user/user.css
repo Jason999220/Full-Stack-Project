@@ -4,10 +4,11 @@
   padding: 10px;
   cursor: pointer;
   margin-top: 20px;
+  border-radius: 20px;
 }
 
 .user:hover {
-  background-color: rgb(245, 243, 243);
+  background-color: rgb(255, 215, 166);
 }
 
 .userImg {

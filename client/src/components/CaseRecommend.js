@@ -43,6 +43,7 @@ function CaseRecommend(porps) {
   }, [currentCaseId]);
 
   const handleChat = (item) => {
+    console.log(item);
     // 取得與該對象聊天訊息
     Chat.getMessage(JSON.parse(localStorage.getItem("userID")), item.userID)
       .then((result) => {
@@ -59,6 +60,7 @@ function CaseRecommend(porps) {
       .catch((err) => {
         console.error(err);
       });
+    navigate("/", {});
   };
 
   const handleDrictCaseView = (caseID) => {

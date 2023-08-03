@@ -1,13 +1,12 @@
 import "./user.css";
 
 export default function User({ user, online }) {
-  console.log("User" ,user);
-  console.log("User online", online);
+
   return (
     <div className="user">
       <img
         className="userImg"
-        src="https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg"
+        src={user.profilePhoto? `data:image/jpeg;base64, ${user.profilePhoto}` : "https://img.freepik.com/free-vector/businessman-character-avatar-isolated_24877-60111.jpg"}
         alt=""
       />
       <div className={online ? "userStatus online" : "userStatus"}></div>

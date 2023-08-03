@@ -112,6 +112,14 @@ class Case {
       selfRecommended,
     });
   }
+
+  // 收藏案件
+  addCollection(caseID, userID) {
+    return axios.post(API_URL + `/addCollection`, {
+      caseID,
+      userID,
+    });
+  }
 }
 
 // new 一個 Auth 的實例 ，export default 默認導出 供其他程式直接引用

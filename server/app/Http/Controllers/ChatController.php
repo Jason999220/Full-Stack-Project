@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 
 class ChatController extends Controller
@@ -23,6 +24,13 @@ class ChatController extends Controller
     {
         $currentUserId =  (int)$request['currentUserId'];
         $results = DB::select('CALL chatUser(?)',[$currentUserId]);
+        for ($i=0; $i < count($results); $i++) {
+            if ($results[$i]->profilePhoto != null) {
+                $newPhoto = Storage::get($results[$i]->profilePhoto);
+                $results[$i]->profilePhoto = base64_encode($newPhoto);
+            }
+        }
+        
         return $results;
     }
 

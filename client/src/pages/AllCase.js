@@ -280,10 +280,10 @@ function AllCase() {
                     <p>預計完成日期: {item.deadline}</p>
                     <Link
                       className="moreView"
-                      to={"/caseview"}
+                      to={`/caseview/${item.caseID}`}
                       data-caseid={item.caseID}
                       onClick={(e) => {
-                        console.log(e.target["dataset"]["caseid"]);
+                        // console.log(e.target["dataset"]["caseid"]);
                         // 取得當前點擊的case ID，並導向至caseview
                         setCurrentCaseId(e.target["dataset"]["caseid"]);
                       }}

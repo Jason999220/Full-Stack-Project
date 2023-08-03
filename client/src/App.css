@@ -13,8 +13,6 @@ main {
   min-height: calc(100vh - 100px);
 }
 
-
-
 .home__container {
   width: 100%;
   height: 100vh;
@@ -24,7 +22,7 @@ main {
   align-items: center;
 }
 
-.home__container>* {
+.home__container > * {
   margin-bottom: 10px;
 }
 
@@ -77,7 +75,7 @@ main {
   margin-bottom: 10px;
   color: #607eaa;
   font-size: 18px;
-  transition: ease .5s;
+  transition: ease 0.5s;
   text-align: left;
   cursor: pointer;
 }
@@ -87,7 +85,7 @@ main {
   font-size: 12px;
   cursor: default;
 }
-.online__users>* {
+.online__users > * {
   margin-bottom: 10px;
   color: rgb(238, 102, 102);
   font-style: italic;
@@ -121,7 +119,7 @@ main {
   overflow-y: scroll;
 }
 
-.message__container>* {
+.message__container > * {
   margin-bottom: 10px;
 }
 
@@ -181,7 +179,7 @@ main {
   font-size: 15px;
 }
 
-.message__chats>p {
+.message__chats > p {
   font-size: 13px;
 }
 
@@ -194,4 +192,24 @@ main {
   bottom: 50px;
   font-size: 13px;
   font-style: italic;
+}
+
+/* 讓 input 有格式錯誤的動態 */
+input:invalid {
+  animation: justshake 0.3s forwards;
+  color: red;
+}
+@keyframes justshake {
+  25% {
+    transform: translateX(5px);
+  }
+  50% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+  100% {
+    transform: translateX(-5px);
+  }
 }

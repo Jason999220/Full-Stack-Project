@@ -1,11 +1,12 @@
 import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import "./userinfo.css";
 import Case from "../axios/Case";
 import { GlobelDate } from "../App";
 import Payment from "../axios/Payment";
 
 function UserInfo(props) {
+  const { caseID } = useParams();
   const navigate = useNavigate();
   // 取得全域變數
   const { setInfoData, currentCaseId, setEcpayHtml } = useContext(GlobelDate);
@@ -16,7 +17,7 @@ function UserInfo(props) {
   const [quotation, setQuotation] = useState(0); // 報價金額
   const [win, setWin] = useState(false); // 預設
   const [selfRecommended, setSelfRecommended] = useState(""); // 自我推薦
-  let MerchantTradeNo = "Test1000"; // 不可以空格
+  let MerchantTradeNo = "Test1000"; // !不可以空格
   let ItemName = "Test ECPay 100NT *1";
   let TotalAmount = 1000;
   let TradeDesc = "Test ECPay";
@@ -24,7 +25,7 @@ function UserInfo(props) {
 
   const handleBidder = () => {
     // 將訂單資訊傳入ECPay
-    Payment.pay(MerchantTradeNo, ItemName, TotalAmount, TradeDesc)
+    Payment.pay(MerchantTradeNo, ItemName, TotalAmount, TradeDesc, caseID)
       .then((result) => {
         console.log(result["data"]);
         setEcpayHtml(result["data"]);

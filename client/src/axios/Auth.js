@@ -2,7 +2,7 @@ import axios from "axios"; // 引入 axios 工具
 
 // 後端給的網址
 const API_URL =
-  "http://localhost/Full-Stack-Project/server/public/api";
+  "http://localhost/Full-Stack-Project/server/public/index.php/api";
 // "https://4f5a-2001-b011-9807-59a3-714d-fb29-35af-f071.ngrok-free.app/public/index.php/api";
 
 class Auth {
@@ -181,11 +181,11 @@ class Auth {
   }
 
   //提案進度條
-  enterCaseStepClient(userID, caseID) {
+  enterCaseStepClient(userID, page) {
     return axios.get(API_URL + "/enterCaseStepClient", {
       params: {
         userID,
-        caseID,
+        page,
       },
     });
   }

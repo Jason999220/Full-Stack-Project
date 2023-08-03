@@ -25,43 +25,43 @@ export const GlobelDate = React.createContext({});
 function App() {
   const navigate = useNavigate();
   // chat --- start
-  const [usersList, addUsers] = useState([]);
-  // When the user is login fetched_userName from Login.js with submit
-  const getUsername = (fetched_userName) => {
-    setUserName(fetched_userName);
-    socket.auth = { fetched_userName };
-    socket.connect(); // 丟回 server line 30
-  };
+//   const [usersList, addUsers] = useState([]);
+//   // When the user is login fetched_userName from Login.js with submit
+//   const getUsername = (fetched_userName) => {
+//     setUserName(fetched_userName);
+//     socket.auth = { fetched_userName };
+//     socket.connect(); // 丟回 server line 30
+//   };
 
-  const initReactiveProperties = (user) => {
-    user.connected = true;
-    user.hasNewMessages = false;
-  };
+//   const initReactiveProperties = (user) => {
+//     user.connected = true;
+//     user.hasNewMessages = false;
+//   };
 
-  socket.on("other user connect", (user) => {
-    initReactiveProperties(user);
-    addUsers([...usersList, user]);
-  });
+//   socket.on("other user connect", (user) => {
+//     initReactiveProperties(user);
+//     addUsers([...usersList, user]);
+//   });
 
-  // 更新 user.self 狀態
-  socket.on("users", (users) => {
-    users.forEach((user) => {
-      // 透過該網頁的 socket.id 與 userID 判斷是否為本人
-      user.self = user.userID === socket.id;
-      initReactiveProperties(user);
-    });
-    addUsers(users);
-  });
+//   // 更新 user.self 狀態
+//   socket.on("users", (users) => {
+//     users.forEach((user) => {
+//       // 透過該網頁的 socket.id 與 userID 判斷是否為本人
+//       user.self = user.userID === socket.id;
+//       initReactiveProperties(user);
+//     });
+//     addUsers(users);
+//   });
 
-  socket.on("user disconnected", (user) => {
-    for (let i = 0; i < usersList.length; i++) {
-      const userInList = usersList[i];
-      if (userInList.username === user.username) {
-        usersList[i].connected = false;
-        break;
-      }
-    }
-  });
+//   socket.on("user disconnected", (user) => {
+//     for (let i = 0; i < usersList.length; i++) {
+//       const userInList = usersList[i];
+//       if (userInList.username === user.username) {
+//         usersList[i].connected = false;
+//         break;
+//       }
+//     }
+//   });
   // chat --- end
 
   // 給註冊登入使用
@@ -205,14 +205,14 @@ function App() {
           <Route path={"/register"} element={<Register />} />
           <Route path={"/proposal"} element={<Proposal />} />
           <Route path={"/allCase"} element={<AllCase />} />
-          <Route path={"/CaseView"} element={<CaseView />} />
+          <Route path={"/CaseView/:caseID"} element={<CaseView />} />
           <Route path={"/chatRoom"} element={<ChatRoom />} />
           <Route path={"/Scheme/:bidderID"} element={<Scheme />} />
           <Route path={"/checkInfo"} element={<CheckInfo />} />
           <Route path={"/Ecpay"} element={<Ecpay />} />
           <Route
             path={"/ChatRoom/:chatid"}
-            element={<ChatRoom connectedUsers={usersList} />}
+            element={<ChatRoom />}
           />
         </Routes>
         <Footer />

@@ -1,6 +1,5 @@
 const app = require("express")();
 const http = require("http").Server(app);
-const moment = require("moment");
 const PORT = 4000;
 
 // CORS
@@ -38,15 +37,23 @@ io.on("connection", (socket) => {
     // when send message
     socket.on("sendMessage", ({ senderId, receiverId, text }) => {
         const user = getUser(receiverId);
-        io.to(user.socketId).emit("getMessage", {
-            senderId,
-            text,
-        });
+        if(user) {
+            // 
+            io.to(user.socketId).emit("getMessage", {
+                senderId,
+                text,
+            });
+            // 
+            io.to(user.socketId).emit("getNotification", {
+                senderId: senderId,
+                isRead: false,
+            });
+        }
     });
 
     // when disconnect
     socket.on("disconnect", (userId) => {
-        console.log("a user disconnected!");
+        console.log(`a ${socket.id} disconnected!`);
         removeUser(socket.id);
         io.emit("getUsers", users);
     });

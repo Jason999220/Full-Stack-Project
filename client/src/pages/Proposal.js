@@ -9,7 +9,7 @@ function Proposal() {
   const location = useLocation(); // get case data from ProposalRecord
 
   // 選擇全域變數
-  const { } = useContext(GlobelDate);
+  const {} = useContext(GlobelDate);
   // 儲存選擇的母、子類別
   const [category, setCategory] = useState();
   const [subCategory, setSubCategory] = useState();
@@ -66,8 +66,8 @@ function Proposal() {
     location.state ? location.state["caseInfo"][0]["contactTime"][3] : "0"
   );
   // 所有檔案
-  const [allFiles, setAllFiles] = useState();
-  const [overFile, setOverFile] = useState(); // 防止超過五張還按送出
+  const [allFiles, setAllFiles] = useState(null);
+  const [overFile, setOverFile] = useState(true); // 防止超過五張還按送出
 
   // 處理【聯絡時間】的boolean
   const handlecontactTime = (event) => {
@@ -137,6 +137,35 @@ function Proposal() {
 
   // 處理 => 發布案件
   const handlePublishCase = () => {
+    // check user write form
+    if (!name) {
+      alert("Please write your name.");
+      return;
+    } else if (!category) {
+      alert("Please choose case category.");
+      return;
+    } else if (!category) {
+      alert("Please choose case category.");
+      return;
+    } else if (!subCategory) {
+      alert("Please choose case subCategory.");
+      return;
+    } else if (!city) {
+      alert("Please choose case city.");
+      return;
+    } else if (!subCity) {
+      alert("Please choose case subCity.");
+      return;
+    } else if (!budget) {
+      alert("Please write case budget.");
+      return;
+    } else if (!deadline) {
+      alert("Please write case deadline.");
+      return;
+    } else if (!contactName) {
+      alert("Please write your contactName.");
+      return;
+    }
     let status = "刊登中";
     // 取得當前 userID
     let userID = JSON.parse(localStorage.getItem("userID"));
@@ -173,7 +202,7 @@ function Proposal() {
   const handleDraftCase = () => {
     let status = "草稿";
     let userID = JSON.parse(localStorage.getItem("userID"));
-    Case.proposal(
+    Case.addCase(
       caseID,
       userID,
       name,
@@ -214,6 +243,7 @@ function Proposal() {
             placeholder="請填寫案件名稱"
             onChange={(event) => setName(event.target.value)}
             value={name}
+            required
           />
         </div>
         {/* 類別需求 */}
@@ -225,6 +255,7 @@ function Proposal() {
             style={{ width: "200px" }}
             // value={category}
             onChange={handleCategoryChange}
+            required
           >
             <option selected disabled>
               請選擇....
@@ -243,6 +274,7 @@ function Proposal() {
               aria-label="Default select example"
               style={{ width: "200p;x" }}
               onChange={handleSubCategoryChange}
+              required
             >
               <option selected disabled>
                 請選擇...
@@ -270,6 +302,8 @@ function Proposal() {
               setBudget(event.target.value);
             }}
             value={budget}
+            pattern="\d+"
+            required
           />
         </div>
         {/* 期限 */}
@@ -295,6 +329,7 @@ function Proposal() {
             aria-label="Default select example"
             style={{ width: "200px" }}
             onChange={handleCityChange}
+            required
           >
             <option selected disabled>
               請選擇....
@@ -313,6 +348,7 @@ function Proposal() {
               aria-label="Default select example"
               style={{ width: "200p;x" }}
               onChange={handleSubCityChange}
+              required
             >
               <option selected disabled>
                 請選擇...
@@ -337,6 +373,7 @@ function Proposal() {
             aria-label="With textarea"
             onChange={(event) => setDescription(event.target.value)}
             value={description}
+            required
           ></textarea>
         </div>
         {/* 檔案 */}
@@ -357,12 +394,13 @@ function Proposal() {
             accept="image/jpeg, image/png, application/pdf"
             required
             onChange={(e) => {
-              if (e.target.files.length > 5) {
-                setOverFile(false);
-                return alert(`最多只能選擇5個檔案，請重新選取`);
-              } else {
+              if (e.target.files.length < 5) {
                 setOverFile(true);
                 setAllFiles(e.target.files);
+              } else {
+                setOverFile(false);
+                setAllFiles(e.target.files);
+                return alert(`最多只能選擇5個檔案，請重新選取`);
               }
             }}
           />
@@ -375,6 +413,8 @@ function Proposal() {
             placeholder="請輸入聯絡人名稱"
             onChange={(event) => setContactName(event.target.value)}
             value={contactName}
+            pattern="[^0-9]+" // 限制不可有數字，可以下底線
+            required
           />
           <h4>允許接案人透過電話聯絡您嗎?</h4>
           <select
@@ -385,6 +425,7 @@ function Proposal() {
               console.log(event.target.value);
             }}
             value={isContactPhone}
+            required
           >
             <option selected disabled>
               請選擇...
@@ -398,6 +439,7 @@ function Proposal() {
             placeholder="請輸入連絡人電話號碼"
             onChange={(event) => setContactPhone(event.target.value)}
             value={contactPhone}
+            pattern="\d+"
           />
           <h4>請勾選希望接案人聯絡時段?</h4>
           <input

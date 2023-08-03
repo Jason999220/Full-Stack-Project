@@ -217,20 +217,5 @@ class CasesController extends Controller
 
         return response()->json($results);
     }
-    
-    // 收藏案件icon
-    // public function updateIcon(Request $request) {
-    //     $index = $request->input('index');
-    //     $case = myCase::find($index);
-
-    //     if($case) {
-    //         $case->caseStar = !$case->caseStar;
-    //         $case->save();
-    
-    //         return response()->json(['message'=>'案件收藏狀態已更新','case'=>$case],200);    
-    //     }else {
-    //         return response()->json(['message'=>'找不到對應案件'],404);
-    //     }
-    // }
 
 }

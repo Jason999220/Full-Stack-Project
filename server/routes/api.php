@@ -79,6 +79,7 @@ Route::get('cases/getCaseInfo', [CasesController::class, 'getCaseInfo']); // 取
 Route::get('cases/getSimilarCase', [CasesController::class, 'getSimilarCase']); // 取得當前被點擊案件的類似案件
 Route::get('cases/getBidder', [CasesController::class, 'getBidder']); // 取得當前被點擊案件的報價人員
 Route::post('cases/newBidder', [CasesController::class, 'newBidder']); // 新增報價人員
+Route::post('cases/addCollection', [CasesController::class, 'addCollection']); // 收藏案件
 
 // 聊天室
 Route::get('chat/getMessage', [ChatController::class, 'getMessage']); // 獲得當前被點擊【聊聊】的使用者訊息
