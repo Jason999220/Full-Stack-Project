@@ -93,4 +93,16 @@ Route::post('scheme/newCaseStep', [SchemeController::class, 'newCaseStep']); // 
 Route::post('payment/pay', [PaymentController::class, 'checkout']); // 將資料送給 ECPay
 Route::get('payment/callback', [PaymentController::class, 'callback']); // 取得 ECPay 的回傳資料
 
+// 進入我的收藏
+Route::post('/enterFavorite', [CasesController::class, 'collectionList']);
+// icon收藏狀態
+Route::post('/collectionState', [CasesController::class, 'createCollection']);
+// Route::group(['middleware' => ['cors']], function () {
+//     // Your routes here...
+//     Route::post('/collectionState', [CasesController::class, 'createCollection']);
+// });
 
+
+
+// 處理案件icon收藏狀態
+// Route::post('/updateCaseStar', [CaseController::class, 'updateIcon']);

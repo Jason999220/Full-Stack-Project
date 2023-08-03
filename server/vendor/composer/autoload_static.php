@@ -615,6 +615,7 @@ class ComposerStaticInite5c5d3c0e7550bf2e1784bd3c4ae9896
         'App\\Http\\Controllers\\Controller' => __DIR__ . '/../..' . '/app/Http/Controllers/Controller.php',
         'App\\Http\\Controllers\\InformationController' => __DIR__ . '/../..' . '/app/Http/Controllers/InformationController.php',
         'App\\Http\\Controllers\\PaymentController' => __DIR__ . '/../..' . '/app/Http/Controllers/PaymentController.php',
+        'App\\Http\\Controllers\\SchemeController' => __DIR__ . '/../..' . '/app/Http/Controllers/SchemeController.php',
         'App\\Http\\Controllers\\UserController' => __DIR__ . '/../..' . '/app/Http/Controllers/UserController.php',
         'App\\Http\\Kernel' => __DIR__ . '/../..' . '/app/Http/Kernel.php',
         'App\\Http\\Middleware\\Authenticate' => __DIR__ . '/../..' . '/app/Http/Middleware/Authenticate.php',
