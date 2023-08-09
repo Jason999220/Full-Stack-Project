@@ -5,11 +5,24 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
+
+// 檔案存取
+Route::middleware('api')->group(function () {
+    Route::post('/upload-file', [FileUploadController::class, 'upload']);
+});
+
+
+
+
+
 
 // 處理登入、註冊、登出
 Route::post('/auth/signup', [UserController::class, 'signup']);
@@ -79,7 +92,7 @@ Route::get('cases/getCaseInfo', [CasesController::class, 'getCaseInfo']); // 取
 Route::get('cases/getSimilarCase', [CasesController::class, 'getSimilarCase']); // 取得當前被點擊案件的類似案件
 Route::get('cases/getBidder', [CasesController::class, 'getBidder']); // 取得當前被點擊案件的報價人員
 Route::post('cases/newBidder', [CasesController::class, 'newBidder']); // 新增報價人員
-Route::post('cases/addCollection', [CasesController::class, 'addCollection']); // 收藏案件
+Route::post('cases/addCollection', [CasesController::class, 'createCollection']); // 收藏案件
 
 // 聊天室
 Route::get('chat/getMessage', [ChatController::class, 'getMessage']); // 獲得當前被點擊【聊聊】的使用者訊息

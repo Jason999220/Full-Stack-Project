@@ -3,6 +3,8 @@ import "./proposal.css";
 import { GlobelDate } from "../App";
 import Case from "../axios/Case";
 import { useLocation, useNavigate } from "react-router-dom";
+import axios from "axios"; // 導入 axios
+
 
 function Proposal() {
   const navigate = useNavigate();
@@ -66,8 +68,11 @@ function Proposal() {
     location.state ? location.state["caseInfo"][0]["contactTime"][3] : "0"
   );
   // 所有檔案
-  const [allFiles, setAllFiles] = useState(null);
+  // const [allFiles, setAllFiles] = useState(null);
   const [overFile, setOverFile] = useState(true); // 防止超過五張還按送出
+  const [allFiles, setAllFiles] = useState([]); // 更改初始值为一个空数组
+  const [uploadingFiles, setUploadingFiles] = useState(false); // 追加状态来管理上传状态
+
 
   // 處理【聯絡時間】的boolean
   const handlecontactTime = (event) => {
@@ -110,7 +115,29 @@ function Proposal() {
         )}`
       );
     }
+
+
+
+    //////////////////
+  //   const formData = new FormData();
+
+  // // 將選擇的檔案附加到表單資料
+  //   for (let i = 0; i < allFiles.length; i++) {
+  //   formData.append(`file[${i}]`, allFiles[i]);
+  //   }
+
+  //   // 呼叫後端的 API 來上傳檔案到 S3
+  //   axios.post('/api/upload-file', formData)
+  //   .then((response) => {
+  //     const fileUrl = response.data.url;
+  //     // 你現有的用於新增案件資訊的程式碼
+  //     // 確保在傳送到後端的資料中包含檔案 URL
+  //   })
+  //   .catch((error) => {
+  //     console.error('檔案上傳錯誤：', error);
+  //   });
   };
+
 
   // 判別【聯絡時間】的boolean
 
@@ -228,6 +255,9 @@ function Proposal() {
         console.error(err);
       });
   };
+
+
+
 
   return (
     <main className="container">
