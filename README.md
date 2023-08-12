@@ -87,6 +87,16 @@
 
 上圖的錯誤，是因為其他組員使用 npm 安裝了新套件，但 pull 並不會在你本地 client/node_module 中一同安裝( gitignore 的關係)，所以需要於終端機在 client 資料夾路徑下輸入以下指令進行安裝
 
+
+## AWS 問題
+1. 需在serve端安装 AWS SDK for PHP：
+   $ composer require aws/aws-sdk-php
+2. 配置 AWS 訪問 .env檔：
+   AWS_ACCESS_KEY_ID=your_access_key_id
+   AWS_SECRET_ACCESS_KEY=your_secret_access_key
+   AWS_DEFAULT_REGION=your_preferred_region
+
+
 ```
  npm install
 ```
