@@ -36,7 +36,6 @@ function MyFavorite() {
         console.log(response);
         setCollectionCase(response["data"]);
 
-        // 创建一个对象来保存每个案件的收藏状态，键为案件ID，值为收藏状态
         const favoriteStatus = {};
         response["data"].forEach((item) => {
           favoriteStatus[item.caseID] = true;
