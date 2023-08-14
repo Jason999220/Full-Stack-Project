@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { GlobelDate } from "../App";
 import axios from "axios";
 import Auth from "../axios/Auth";
+import { Modal, Button } from "react-bootstrap";
 
 function InfoData() {
   // const [modal, setModal] = useState(false);
@@ -192,6 +193,44 @@ function InfoData() {
     } else if (file.charAt(0) === "U") {
       return "application/pdf";
     }
+  };
+
+  //顯示作品集
+  const handleFileClick = (e, file, fileName) => {
+    e.preventDefault();
+    // 判断文件类型
+    const fileType = getFileType(fileName);
+
+    if (fileType === "image") {
+      // 如果是图片文件，直接在模态窗口中显示
+      showImageInModal(file);
+    } else if (fileType === "pdf") {
+      // 如果是PDF文件，打开新窗口显示
+      window.open(file, "_blank");
+    }
+  };
+
+  const getFileType = (fileName) => {
+    const extension = fileName.split(".").pop().toLowerCase();
+    if (["jpg", "jpeg", "png", "gif"].includes(extension)) {
+      return "image";
+    } else if (extension === "pdf") {
+      return "pdf";
+    }
+    return "unknown";
+  };
+
+  const showImageInModal = (file) => {
+    // 在模态窗口中显示图片
+    // 您可以根据需要使用不同的方法来显示图片，比如使用 <img> 标签或背景图片等
+    // 这里只是一个示例，您可以根据实际情况进行调整
+    const modalContent = document.querySelector(".modal-body");
+    modalContent.innerHTML = `<img src="${file}" alt="File" />`;
+    // 打开模态窗口
+    const modal = new bootstrap.Modal(
+      document.getElementById("changeportfolio")
+    );
+    modal.show();
   };
 
   //修改擅長工具
@@ -596,9 +635,9 @@ function InfoData() {
             <span className="portfolio flexGrow2">
               {portfolio.map((file, index) => (
                 <a
-                  href={`data:${fileType(file)};base64, ${file}`}
+                  href="#"
                   key={index}
-                  download={fileName[index]}
+                  onClick={(e) => handleFileClick(e, file, fileName[index])}
                 >
                   {fileName[index]}
                 </a>
@@ -636,24 +675,7 @@ function InfoData() {
                       <label htmlFor="avatar1">
                         請上傳作品集(圖片檔 or PDF檔)：
                       </label>
-                      <input
-                        type="file"
-                        multiple
-                        id="avatar1"
-                        name="avatar"
-                        className="inputText"
-                        accept="image/jpeg, image/png, application/pdf"
-                        required
-                        onChange={(e) => {
-                          if (e.target.files.length > 5) {
-                            setOverFile(false);
-                            return alert(`最多只能選擇5個檔案，請重新選取`);
-                          } else {
-                            setOverFile(true);
-                            setChangePortfolio(e.target.files);
-                          }
-                        }}
-                      />
+                      {/* 文件上传输入框 */}
                     </div>
                     <button
                       type="submit"
@@ -665,6 +687,59 @@ function InfoData() {
                     >
                       修改
                     </button>
+                    {/* <Modal.Header closeButton>
+                      <Modal.Title>{selectedFileName}</Modal.Title>
+                    </Modal.Header>
+                    <Modal.Body>
+                      {selectedFile && (
+                        <iframe
+                          title="file-preview"
+                          src={selectedFile}
+                          width="100%"
+                          height="500px"
+                        />
+                      )}
+                    </Modal.Body> */}
+                    {/* 模态框 */}
+                    <div
+                      className="modal fade"
+                      id="changeportfolio"
+                      data-bs-backdrop="static"
+                      data-bs-keyboard="false"
+                      tabIndex="-1"
+                      aria-labelledby="staticBackdropLabel"
+                      aria-hidden="true"
+                    >
+                      <div className="modal-dialog modal-dialog-centered">
+                        <div className="modal-content">
+                          <div className="modal-header">
+                            <span className="spanCenter">作品集预览</span>
+                            <button
+                              type="button"
+                              className="btn-close mx-0"
+                              data-bs-dismiss="modal"
+                              aria-label="Close"
+                            ></button>
+                          </div>
+                          <div className="modal-body">
+                            <Modal.Header closeButton>
+                              <Modal.Title>{selectedFileName}</Modal.Title>
+                            </Modal.Header>
+                            <Modal.Body>
+                              {selectedFile && (
+                                <iframe
+                                  title="file-preview"
+                                  src={selectedFile}
+                                  width="100%"
+                                  height="500px"
+                                />
+                              )}
+                            </Modal.Body>
+                          </div>
+                          <div className="modal-footer"></div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                   <div className="modal-footer"></div>
                 </div>
