@@ -1,7 +1,7 @@
 *
 !public/
 !.gitignore
-!documents/
-!upload/
-!files/
-!proposalFiles/
+! documents
+! upload
+! files
+! proposalFiles
