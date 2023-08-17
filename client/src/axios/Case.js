@@ -113,8 +113,8 @@ class Case {
     });
   }
 
-  // 收藏案件
-  addCollection(caseID, userID) {
+   // 收藏案件
+   addCollection(caseID, userID) {
     return axios.post(API_URL + `/addCollection`, {
       caseID,
       userID,

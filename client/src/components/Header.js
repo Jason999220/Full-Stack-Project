@@ -8,6 +8,7 @@ import headerLogo from "../imgs/header_logo.png";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import presetHeadPhoto from "../imgs/head.png";
+import { FaSearch } from "react-icons/fa";
 
 function Header() {
   const {
@@ -18,6 +19,7 @@ function Header() {
     setInfoData,
     unreadNotifications,
   } = useContext(GlobelDate);
+
   const handleLogout = () => {
     Auth.logout(userinfo)
       .then((result) => {
@@ -63,6 +65,20 @@ function Header() {
     }
   }, []);
   console.log(headphoto);
+  // console.log(JSON.stringify(localStorage.getItem("userInfo")));
+
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await Auth.keyword(searchKeyword);
+      setSearchResults(response.data);
+    } catch (error) {
+      console.error("Error fetching search results:", error);
+    }
+  };
+
   return (
     <div className="header">
       <div className="h50 d-flex my-auto align-items-center navbar-expand-lg navbar-light fW">
@@ -97,86 +113,106 @@ function Header() {
                 接案
               </Link>
             </li>
+            {/* <div className="search-icon-container">
+              <FaSearch
+                className="search-icon"
+                size={24}
+                onClick={handleSearch} // 在图标上添加点击事件
+              />
+            </div> */}
             <li class="nav-item dFlex">
               {userinfo ? (
-                <div className="dropdown ms-auto">
-                  <Link
-                    to="#"
-                    className="d-block link-dark text-decoration-none"
-                    id="dropdownUser2"
-                    data-bs-toggle="dropdown"
-                    aria-expanded="false"
-                  >
-                    <img
-                      src={
-                        headphoto.charAt(23) === "R" ||
-                        headphoto.charAt(23) === "i" ||
-                        headphoto.charAt(23) === "/" ||
-                        headphoto.charAt(24) === "R" ||
-                        headphoto.charAt(24) === "i" ||
-                        headphoto.charAt(24) === "/"
-                          ? headphoto
-                          : presetHeadPhoto
-                      }
-                      style={{ objectFit: "cover" }}
-                      alt="mdo"
-                      width="40"
-                      height="40"
-                      className="rounded-circle rwdPhoto"
+                <div className="d-flex align-items-center">
+                  {" "}
+                  {/* 用户登录的 div */}
+                  <div className="search-icon-container mr-3">
+                    <FaSearch
+                      className="search-icon"
+                      size={24}
+                      onClick={handleSearch}
                     />
-                  </Link>
-                  <ul
-                    className="dropdown-menu text-small shadow rwdhead"
-                    aria-labelledby="dropdownUser2"
-                  >
-                    <li>
-                      <Link
-                        className="dropdown-item rwdWord"
-                        to="/personalinfo"
-                        onClick={() => setInfoData("1")}
-                      >
-                        我的帳號
-                      </Link>
-                    </li>
-                    <li>
-                      <Link
-                        className="dropdown-item rwdWord"
-                        to="/personalinfo"
-                        onClick={() => setInfoData("3")}
-                      >
-                        我的案件
-                      </Link>
-                    </li>
-                    <li>
-                      <Link className="dropdown-item rwdWord" to="/chatRoom">
-                        聊天室
-                        <span
-                          className={
-                            unreadNotifications?.length === 0
-                              ? null
-                              : "chatRoomNotification"
-                          }
-                        ></span>
-                      </Link>
-                    </li>
-                    <li>
-                      <hr className="dropdown-divider" />
-                    </li>
-                    <li>
-                      <Link
-                        className="dropdown-item rwdWord"
-                        to=""
-                        onClick={handleLogout}
-                      >
-                        登出
-                      </Link>
-                    </li>
-                  </ul>
+                  </div>
+                  //
+                  <div className="dropdown ms-auto">
+                    <Link
+                      to="#"
+                      className="d-block link-dark text-decoration-none"
+                      id="dropdownUser2"
+                      data-bs-toggle="dropdown"
+                      aria-expanded="false"
+                    >
+                      <img
+                        src={
+                          headphoto.charAt(23) === "R" ||
+                          headphoto.charAt(23) === "i" ||
+                          headphoto.charAt(23) === "/" ||
+                          headphoto.charAt(24) === "R" ||
+                          headphoto.charAt(24) === "i" ||
+                          headphoto.charAt(24) === "/"
+                            ? headphoto
+                            : presetHeadPhoto
+                        }
+                        style={{ objectFit: "cover" }}
+                        alt="mdo"
+                        width="40"
+                        height="40"
+                        className="rounded-circle rwdPhoto"
+                      />
+                    </Link>
+                    <ul
+                      className="dropdown-menu text-small shadow rwdhead"
+                      aria-labelledby="dropdownUser2"
+                    >
+                      <li>
+                        <Link
+                          className="dropdown-item rwdWord"
+                          to="/personalinfo"
+                          onClick={() => setInfoData("1")}
+                        >
+                          我的帳號
+                        </Link>
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item rwdWord"
+                          to="/personalinfo"
+                          onClick={() => setInfoData("3")}
+                        >
+                          我的案件
+                        </Link>
+                      </li>
+                      <li>
+                        <Link className="dropdown-item rwdWord" to="/chatRoom">
+                          聊天室
+                          <span
+                            className={
+                              unreadNotifications?.length === 0
+                                ? null
+                                : "chatRoomNotification"
+                            }
+                          ></span>
+                        </Link>
+                      </li>
+                      <li>
+                        <hr className="dropdown-divider" />
+                      </li>
+                      <li>
+                        <Link
+                          className="dropdown-item rwdWord"
+                          to=""
+                          onClick={handleLogout}
+                        >
+                          登出
+                        </Link>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               ) : (
                 <div className="dFlex">
                   {/* 第一個標籤不能運作的BUG，所要加一個DIV */}
                   <div></div>
+
                   <div className="loginBC">
                     <Link to="/login" className="loginBCHover">
                       登入
@@ -194,6 +230,7 @@ function Header() {
         </div>
       </div>
       {/* <ToastContainer limit={1}/> */}
+      <ToastContainer limit={1} />
     </div>
   );
 }

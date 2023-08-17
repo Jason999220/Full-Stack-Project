@@ -5,57 +5,154 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Redis;
+
 
 
 
 class CasesController extends Controller
 {
     // 提案
-    public function insertCase(Request $request)
-    {
-        $caseID = (int)$request['caseID'];
-        $userID = (int)$request['userID'];
-        $name = $request['name'];
-        $category = $request['category'];
-        $subCategory = $request['subCategory'];
-        $budget = (int)$request['budget'];
-        $deadline = $request['deadline'];
-        $city = $request['city'];
-        $subCity = $request['subCity'];
-        $description = $request['description'];
-        $contactName = $request['contactName'];
-        $contactAble = (int)$request['contactAble'];
-        $contactPhone = $request['contactPhone'];
-        $contactTime = $request['contactTime'];
-        $status = $request['status'];
-        $Files = $request->file('allFiles');
-        $allFileName = '';
+    // public function insertCase(Request $request)
+    // {
+    //     $caseID = (int)$request['caseID'];
+    //     $userID = (int)$request['userID'];
+    //     $name = $request['name'];
+    //     $category = $request['category'];
+    //     $subCategory = $request['subCategory'];
+    //     $budget = (int)$request['budget'];
+    //     $deadline = $request['deadline'];
+    //     $city = $request['city'];
+    //     $subCity = $request['subCity'];
+    //     $description = $request['description'];
+    //     $contactName = $request['contactName'];
+    //     $contactAble = (int)$request['contactAble'];
+    //     $contactPhone = $request['contactPhone'];
+    //     $contactTime = $request['contactTime'];
+    //     $status = $request['status'];
+    //     $Files = $request->file('allFiles');
+    //     $allFileName = '';
     
-        if ($Files !== null) {
-            foreach ($Files as $file) {
-                $fileName = $file->getClientOriginalName();
-                $newFileName = time() . '_' . $fileName;
-                $fileContents = file_get_contents($file);
+    //     if ($Files !== null) {
+    //         foreach ($Files as $file) {
+    //             $fileName = $file->getClientOriginalName();
+    //             $newFileName = time() . '_' . $fileName;
+    //             $fileContents = file_get_contents($file);
                 
-                Storage::disk('s3')->put($newFileName, $fileContents, 'public');
+    //             Storage::disk('s3')->put($newFileName, $fileContents, 'public');
                 
-                $fileUrl = Storage::disk('s3')->url($newFileName);
+    //             $fileUrl = Storage::disk('s3')->url($newFileName);
                 
-                $allFileUrls[] = $fileUrl;
-            }
-        }
+    //             $allFileUrls[] = $fileUrl;
+    //         }
+    //     }
     
-        try {
-            $results = DB::select("CALL addMyCase(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
-                $caseID, $userID, $name, $category, $subCategory, $budget, $deadline, $city, $subCity, 
-                $description, $contactName, $contactAble, $contactPhone, $contactTime, $status, implode(',', $allFileUrls)
-            ]);
+    //     try {
+    //         $results = DB::select("CALL addMyCase(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
+    //             $caseID, $userID, $name, $category, $subCategory, $budget, $deadline, $city, $subCity, 
+    //             $description, $contactName, $contactAble, $contactPhone, $contactTime, $status, implode(',', $allFileUrls)
+    //         ]);
             
-            return $results;
-        } catch (\Exception $e) {
-            return response()->json(['result' => '插入案件失败']);
+    //         return $results;
+    //     } catch (\Exception $e) {
+    //         return response()->json(['result' => '插入案件失败']);
+    //     }
+    // public function insertCase(Request $request)
+    // {
+
+    //     $caseID = (int)$request['caseID'];
+    //     $userID = (int)$request['userID'];
+    //     $name = $request['name'];
+    //     $category = $request['category'];
+    //     $subCategory = $request['subCategory'];
+    //     $budget = (int)$request['budget'];
+    //     $deadline = $request['deadline'];
+    //     $city = $request['city'];
+    //     $subCity = $request['subCity'];
+    //     $description = $request['description'];
+    //     $contactName = $request['contactName'];
+    //     $contactAble = (int)$request['contactAble'];
+    //     $contactPhone = $request['contactPhone'];
+    //     $contactTime = $request['contactTime'];
+    //     $status = $request['status'];
+    //     $Files = $request->file('allFiles');
+    //     $allFileName = '';
+    //     if($Files !== null){
+    //          // 處理檔案附檔名及轉碼問題
+    //         $allFileName = 'proposalFiles/'; // 初始設定標頭【proposalFiles/】，自定義的folder name
+    //         $filesNameArray = []; // 存放所有的檔案包括檔名.副檔名
+    //         for($i = 0; $i < count($Files); $i++){
+    //             $fileName = $Files[$i]->getClientOriginalName(); // 檔案名稱
+    //             $Files[$i]->storeAs('proposalFiles', $fileName); // 將要儲存在 storage 的哪個資料夾名稱
+    //             $allFileName .= (string)$fileName . ",proposalFiles/"; // 將 加上逗號
+    //             array_push($filesNameArray, $fileName); // 將 【$fileName】 push to 【$filesNameArray】
+    //         }
+    //         $allFileName = substr($allFileName, 0, -15) . ''; // 將最後的【,files/】移除並加上【"】
+    //     }
+    //     // 為了將其取出
+    //     // $result = DB::select("CALL newPortfolio($userID, $allFileName)")[0]->result; // file name saved in DB
+    //     // $filesName = DB::select("select portfolio from myresume where userID = $userID")[0]->portfolio; // get the file name from the DB
+    //     try {
+    //         $results = DB::select("CALL addMyCase(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [$caseID,$userID, $name, $category, $subCategory, $budget, $deadline, $city,$subCity, $description, $contactName,$contactAble, $contactPhone, $contactTime, $status, $allFileName]);
+    //         return $results;
+    //     } catch (\Exception $e) {
+    //         return response()->json(['result' => '插入案件失败']);
+    //     }
+    //     // CALL addMyCase(0,26,'組裝娃娃','B','B02','20000','2025/12/23','g','g09','幫忙組裝娃娃','娃娃女王',1,'0915758668','0110','刊登中','null','null','null','null','null');
+    // }
+
+
+    public function insertCase(Request $request)
+{
+    $Files = $request->file('allFiles');
+    $allFileUrls = [];
+
+    if ($Files !== null) {
+        foreach ($Files as $file) {
+            $fileName = $file->getClientOriginalName();
+            $newFileName = time() . '_' . $fileName;
+            $fileContents = file_get_contents($file);
+
+            // 上傳到 S3 存儲桶
+            Storage::disk('s3')->put($newFileName, $fileContents, 'public');
+
+            // 取得上傳後的 URL
+            $fileUrl = Storage::disk('s3')->url($newFileName);
+
+            // 將 URL 加入陣列
+            $allFileUrls[] = $fileUrl;
         }
     }
+
+    // 其他字段从请求中获取
+    $caseID = (int)$request['caseID'];
+    $userID = (int)$request['userID'];
+    $name = $request['name'];
+    $category = $request['category'];
+    $subCategory = $request['subCategory'];
+    $budget = (int)$request['budget'];
+    $deadline = $request['deadline'];
+    $city = $request['city'];
+    $subCity = $request['subCity'];
+    $description = $request['description'];
+    $contactName = $request['contactName'];
+    $contactAble = (int)$request['contactAble'];
+    $contactPhone = $request['contactPhone'];
+    $contactTime = $request['contactTime'];
+    $status = $request['status'];
+
+    try {
+        $results = DB::select("CALL addMyCase(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)", [
+            $caseID, $userID, $name, $category, $subCategory, $budget, $deadline, $city, $subCity,
+            $description, $contactName, $contactAble, $contactPhone, $contactTime, $status, implode(',', $allFileUrls),
+        ]);
+
+        return $results;
+    } catch (\Exception $e) {
+        return response()->json(['result' => '插入案件失败']);
+    }
+}
+
 
     // 獲取母、子類別
     public function getCategorys()
@@ -240,6 +337,54 @@ class CasesController extends Controller
 
         return response()->json($results);
     }
+
+
+
+    // //即時搜尋案件
+    // public function search(Request $request)
+    // {
+    //     $keyword = $request->input('q');
+    //     $results = [];
+
+    //     // 先檢查緩存中是否有搜尋結果
+    //     $cachedResults = Redis::get("search:{$keyword}");
+    //     if ($cachedResults) {
+    //         $results = json_decode($cachedResults, true);
+    //     } else {
+    //         // 如果緩存中沒有，則從數據庫中進行搜尋
+    //         $results = DB::table('mycase')
+    //             ->where('caseName', 'LIKE', "%{$keyword}%")
+    //             ->get();
+
+    //         // 將搜索結果存儲到緩存中，有效期可根據需要設置
+    //         Redis::setex("search:{$keyword}", 3600, json_encode($results));
+    //     }
+
+    //     return response()->json($results);
+    // }
+
+    public function search(Request $request)
+    {
+        $keyword = $request->input('keyword');
+
+        $searchResults = [];
+
+        if ($keyword) {
+            // 尝试从 Redis 中获取搜索结果
+            $searchResults = Redis::get("search:$keyword");
+
+            // 如果在 Redis 中没有找到搜索结果，从数据库中获取
+            if (!$searchResults) {
+                $searchResults = Movie::where('title', 'like', "%$keyword%")->get();
+                Redis::setex("search:$keyword", 3600, json_encode($searchResults));
+            } else {
+                $searchResults = json_decode($searchResults);
+            }
+        }
+
+        return response()->json($searchResults);
+    }
+
 
 }
 

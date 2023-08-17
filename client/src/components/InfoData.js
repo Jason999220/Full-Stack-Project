@@ -18,8 +18,11 @@ function InfoData() {
   //修改學經歷
   const [changeexperience, setChangeExperience] = useState("");
   //修改作品集
-  const [changeportfolio, setChangePortfolio] = useState();
+  const [changeportfolio, setChangePortfolio] = useState([]);
   const [portfolioMessange, setPortfolioMessange] = useState("");
+
+  const [fileNames, setFileNames] = useState([]);
+
   const [fileName, setFileName] = useState("");
   const [overFile, setOverFile] = useState();
   // 顯示圖片檔或PDF
@@ -81,6 +84,8 @@ function InfoData() {
             result["data"]["message"][0]["profilePhoto"]
           )};base64, ${result["data"]["message"][0]["profilePhoto"]}`
         );
+        console.log("Portfolio:", portfolio);
+        console.log("FileName:", fileName);
       })
       .catch((err) => {
         console.error(err);
@@ -214,7 +219,13 @@ function InfoData() {
       .then((result) => {
         // console.log(result);
         setPortfolio(result["data"]["files"]);
+        setFileName(result["data"]["fileName"]);
+        const fileNameString = result["data"]["fileName"];
+        const parsedFileNames = JSON.parse(fileNameString); // 将字符串转换为数组
+        setFileNames(parsedFileNames); // 更新文件名数组
+
         // console.log(portfolio);
+        // console.log("Backend fileName:", result["data"]["fileName"]);
 
         setPortfolioMessange(
           toast.info(result["data"]["result"], {
@@ -228,38 +239,85 @@ function InfoData() {
             theme: "light",
           })
         );
-        setFileName(result["data"]["fileName"]);
         portfolioMessange();
       })
       .catch((err) => {
         console.error(err);
       });
   };
-  const fileType = (file) => {
-    if (file.charAt(0) === "/") {
+
+  const fileType = (fileName) => {
+    if (fileName.endsWith(".jpeg") || fileName.endsWith(".jpg")) {
       return "image/jpeg";
-    } else if (file.charAt(0) === "i") {
+    } else if (fileName.endsWith(".png")) {
       return "image/png";
-    } else if (file.charAt(0) === "J") {
+    } else if (fileName.endsWith(".pdf")) {
       return "application/pdf";
-    } else if (file.charAt(0) === "U") {
-      return "application/pdf";
-    } else if (file.charAt(0) === "R") {
+    } else if (fileName.endsWith(".gif")) {
       return "image/gif";
+    }
+    // 如果无法判断类型，可以返回一个默认值
+    return "application/octet-stream";
+  };
+
+  //  顯示作品集
+  const handleFileClick = async (event, fileName) => {
+    // const fileName = fileNames[index]; // 根據索引取得檔案名稱
+    console.log(fileName);
+
+    try {
+      const response = await Auth.getPortfolio(
+        JSON.parse(localStorage.getItem("userID")),
+        fileName
+      );
+      const data = response.data;
+      const fileUrl = data.dataUrl;
+
+      if (fileType(fileName) === "application/pdf") {
+        window.open(fileUrl, "_blank"); // 在新分頁打開PDF
+      } else {
+        setModalContent(<img src={fileUrl} alt="作品集" />);
+        setShowModal(true);
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
   // 顯示作品集
-  const handleFileClick = (fileUrl) => {
-    console.log("handleFileClick called with fileUrl:", fileUrl);
+  // const handleFileClick = (fileName) => {
 
-    if (fileType(fileUrl) === "application/pdf") {
-      window.open(fileUrl, "_blank");
-    } else {
-      setModalContent(<img src={fileUrl} alt="作品集" />);
-      setShowModal(true);
-    }
-  };
+  //   console.log("handleFileClick called with fileUrl:", fileUrl);
+  //   console.log("File URL:", fileUrl);
+
+  //   Auth.getPortfolio(JSON.parse(localStorage.getItem("userID")), fileName);
+
+  //   if (fileType(fileName) === "application/pdf") {
+  //     window.open(fileUrl, "_blank");
+  //   } else {
+  //     setModalContent(<img src={fileUrl} alt="作品集" />);
+  //     setShowModal(true);
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
+  // const handleFileClick = async (fileName) => {
+  //   try {
+  //     const response = await Auth.getPortfolio(JSON.parse(localStorage.getItem("userID")), fileName);
+  //     const data = response.data;
+  //     const fileUrl = data.dataUrl;
+
+  //     if (fileType(fileName) === "application/pdf") {
+  //       window.open(fileUrl, "_blank"); // 在新分页中打开PDF
+  //     } else {
+  //       setModalContent(<img src={fileUrl} alt="作品集" />);
+  //       setShowModal(true);
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
 
   //修改擅長工具
   const handleChangeSkills = () => {
@@ -619,6 +677,64 @@ function InfoData() {
               </div>
             </div>
           </div>
+          <hr />
+          <div className="infoDiv1">
+            <label htmlFor="" className="p2">
+              銀行帳戶：
+            </label>
+            <span>808-0015*********</span>
+            <button
+              className="float-right"
+              data-bs-toggle="modal"
+              data-bs-target="#changebank"
+            >
+              修改
+            </button>
+            <div
+              className="modal fade"
+              id="changebank"
+              data-bs-backdrop="static"
+              data-bs-keyboard="false"
+              tabIndex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <span className="spanCenter">修改銀行帳戶</span>
+                    <button
+                      type="button"
+                      className="btn-close mx-0"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="my-3">
+                      <label htmlFor="avatar1">請輸入銀行代碼與帳戶：</label>
+                      <input
+                        type="tel"
+                        id="avatar1"
+                        name="avatar"
+                        className="inputText"
+                        required
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="btn btn-primary mx-auto d-block"
+                      data-bs-dismiss="modal"
+                      style={{ marginTop: "24px" }}
+                    >
+                      修改
+                    </button>
+                  </div>
+                  <div className="modal-footer"></div>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div className="CVDiv">
@@ -705,25 +821,51 @@ function InfoData() {
               ))}
             </span> */}
             <span className="portfolio flexGrow2">
-              {portfolio.map((fileUrl, index) => (
-                <div key={index}>
-                  <a
-                    key={index}
-                    href={fileUrl} // 使用 S3 对象 URL 作为链接
-                    target={
-                      fileType(fileUrl) === "application/pdf" ? "_blank" : ""
-                    }
-                    // download={fileName[index]}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      handleFileClick(fileUrl);
-                    }}
-                  >
-                    {fileName[index]}
-                  </a>
-                </div>
-              ))}
+              {fileNames &&
+                Array.isArray(fileNames) &&
+                fileNames.map((name, index) => (
+                  <div key={index}>
+                    <a
+                      key={name}
+                      href={name} // 使用 name 而不是 fileName
+                      target={
+                        fileType(name) === "application/pdf" ? "_blank" : ""
+                      }
+                      // download={fileName[index]}
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleFileClick(e, name); // 傳遞事件和檔案名稱
+                      }}
+                    >
+                      {name}
+                    </a>
+                  </div>
+                ))}
             </span>
+
+            {/* Modal to display content */}
+            {showModal && (
+              <div className="modal">
+                <div className="modal-dialog">
+                  <div className="modal-content">
+                    <div className="modal-header">
+                      <button
+                        type="button"
+                        className="close"
+                        onClick={() => {
+                          setShowModal(false);
+                          setModalContent(null);
+                        }}
+                      >
+                        &times;
+                      </button>
+                    </div>
+                    <div className="modal-body">{modalContent}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
             <button
               className="float-right flexGrow3"
               data-bs-toggle="modal"

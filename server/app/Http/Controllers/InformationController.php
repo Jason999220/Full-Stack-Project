@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Aws\S3\S3Client;
+
 
 class InformationController extends Controller
 {
@@ -133,123 +135,221 @@ class InformationController extends Controller
         return response()->json(['result' => $result, 'experience' => $myEucation]);
     }
 
-    //修改作品集
+    
     // public function updatePortfolio(Request $request)
     // {
-    //     // return count($request->file('myPortfolio'));
-    //     if (!$request->file('myPortfolio')){
-    //         return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);;
-    //     }
-    //     $file = $request->file('myPortfolio');
-    //     // return $file;
-    //     $userID = $request->myUserID;
-    //     $allFileName = '"files/';
-    //     $filesNameArray = [];
-    //     for($i = 0; $i < count($file); $i++){
-    //         $fileName = $file[$i]->getClientOriginalName();
-    //         $file[$i]->storeAs('files', $fileName);
-    //         $allFileName .= (string)$fileName . ",files/";
-    //         array_push($filesNameArray, $fileName);
-    //     }
-    //     $allFileName = substr($allFileName, 0, -7) . '"';
-    //     $result = DB::select("CALL newPortfolio($userID, $allFileName)")[0]->result;
-    //     $filesName = DB::select("select portfolio from myresume where userID = $userID")[0]->portfolio;
-    //     $filesArray = explode(',', $filesName);
-    //     // return $filesArray;
-    //     // return base64_encode(Storage::get($filesArray[0]));
-    //     $filesObject = [];
-
-    //     for($i = 0; $i < count($file); $i++) {
-    //         array_push($filesObject, base64_encode(Storage::get($filesArray[$i])));
-    //     }
-    //     return response()->json(['result' => $result, 'files' => $filesObject, 'fileName' => $filesNameArray]);
+    // if (!$request->file('myPortfolio')) {
+    //     return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
     // }
 
-    //修改作品集
+    // $file = $request->file('myPortfolio');
+    // $userID = $request->myUserID;
+    // // $filesArray = [];
+    // $fileUrls = []; // 創建一個空的陣列來存放檔案 URL
+
+    // foreach ($file as $uploadedFile) {
+    //     $fileName = $uploadedFile->getClientOriginalName();
+    //     $newFileName = time() . '_' . $fileName;
+
+    //     Storage::disk('s3')->put($newFileName, file_get_contents($uploadedFile), 'public');
+
+    //     $fileUrl = Storage::disk('s3')->url($newFileName);
+
+    //     $filesArray[] = $fileUrl;
+    //     $filesNameArray[] = $fileName; // 將檔案名稱加入到 $filesNameArray 中
+    //     $fileUrls[] = $fileUrl; // 將檔案 URL 加入到 $fileUrls 陣列中
+    // }
+
+    // $filesNameArray = array_map(function ($fileUrl) {
+    //     return pathinfo($fileUrl)['basename'];
+    // }, $filesArray);
+
+    // $allFileUrls = implode(',', $filesArray);
+    // $result = DB::select("CALL newPortfolio($userID, '$allFileUrls')")[0]->result;
+
+    // return response()->json([
+    //     'result' => $result,
+    //     'files' => $filesArray,
+    //     'fileName' => $filesNameArray,
+    //     'fileUrls' => $fileUrls // 將檔案 URL 陣列加入回傳的 JSON 響應中
+    // ])
+    // }
+
+
+
+
+
     // public function updatePortfolio(Request $request)
     // {
-    //     if (!$request->file('myPortfolio')) {
-    //         return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
-    //     }
-    
-    //     $file = $request->file('myPortfolio');
-    //     $userID = $request->myUserID;
-    //     $filesArray = [];
-    
-    //     foreach ($file as $uploadedFile) {
-    //         $fileName = $uploadedFile->getClientOriginalName();
-    //         $newFileName = time() . '_' . $fileName;
-    
-    //         Storage::disk('s3')->put($newFileName, file_get_contents($uploadedFile), 'public');
-    
-    //         $fileUrl = Storage::disk('s3')->url($newFileName);
-    
-    //         $filesArray[] = $fileUrl;
-
-    //         $filesNameArray[] = $fileName; // 將檔案名稱加入到 $filesNameArray 中
-
-    //     }
-    
-    //     $filesNameArray = array_map(function ($fileUrl) {
-    //         return pathinfo($fileUrl)['basename'];
-    //     }, $filesArray);
-    
-    //     $allFileUrls = implode(',', $filesArray);
-    //     $result = DB::select("CALL newPortfolio($userID, '$allFileUrls')")[0]->result;
-    
-    //     return response()->json(['result' => $result, 'files' => $filesArray, 'fileName' => $filesNameArray, 'fileUrls' => $fileUrls]);
+    // if (!$request->hasFile('myPortfolio')) {
+    //     return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
     // }
-    public function updatePortfolio(Request $request)
+
+    // $files = $request->file('myPortfolio');
+    // $userID = $request->myUserID;
+    // $filesNameArray = [];
+
+    // foreach ($files as $file) {
+    //     $fileName = $file->getClientOriginalName();
+    //     // $filesNameArray[] = $fileName; // 存儲文件名
+
+
+    //     // 上傳文件到S3
+    //     $s3FilePath = Storage::disk('s3')->put('pieceofcases/' . $fileName, file_get_contents($file), 'public');
+
+    //     // 取出S3檔案網址
+    //     // $fileUrl = Storage::disk('s3')->url('pieceofcases/'. $fileName);
+
+    //     $filesNameArray[] = $fileName; // 存儲文件名
+    // }
+
+    // // 將文件名數組轉換JSON字符串已存儲到數據庫
+    // $filesJson = json_encode($filesNameArray);
+
+    // $result = DB::select("CALL newPortfolio($userID, ?)", [$filesJson])[0]->result;
+    // $filesName = DB::select("SELECT portfolio FROM myresume WHERE userID = $userID")[0]->portfolio;
+    // $filesArray = explode(',', $filesName);
+
+    // $filesObject = [];
+    // foreach ($filesArray as $fileName) {
+    //     $decodedFileName = urldecode($fileName);
+    //     $fileContent = Storage::disk('s3')->get('pieceofcases/' . $decodedFileName);
+    //     $encodedContent = base64_encode($fileContent);
+    //     $filesObject[] = $encodedContent;
+    // }
+    // $filesNameString = implode(',', $filesNameArray);
+
+    // return response()->json([
+    //     'result' => $result, 
+    //     'files' => $filesObject, 
+    //     'fileName' => $filesNameString
+    // ]);
+    // }
+
+//     public function updatePortfolio(Request $request)
+//     {
+//     if (!$request->hasFile('myPortfolio')) {
+//         return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
+//     }
+
+//     $files = $request->file('myPortfolio');
+//     $userID = $request->myUserID;
+//     $filesNameArray = [];
+
+//     foreach ($files as $file) {
+//         $fileName = $file->getClientOriginalName();
+//         $filesNameArray[] = $fileName; // 存儲文件名
+
+//         // 上傳文件到S3
+//         $s3FilePath = Storage::disk('s3')->put('pieceofcases/' . $fileName, file_get_contents($file), 'public');
+//     }
+
+//     // 將文件名數組轉換JSON字符串已存儲到數據庫
+//     $filesJson = json_encode($filesNameArray);
+
+//     $result = DB::select("CALL newPortfolio($userID, ?)", [$filesJson])[0]->result;
+//     $filesName = DB::select("SELECT portfolio FROM myresume WHERE userID = $userID")[0]->portfolio;
+//     $filesArray = explode(',', $filesName);
+
+//     $filesObject = [];
+//     foreach ($filesArray as $fileName) {
+//         $fileContent = Storage::disk('s3')->get('pieceofcases/' . $fileName);
+//         $encodedContent = base64_encode($fileContent);
+//         $filesObject[] = $encodedContent;
+//     }
+
+//     return response()->json([
+//         'result' => $result, 
+//         // 'files' => $filesObject, 
+//         'fileName' => $filesJson
+//     ]);
+// }
+
+public function updatePortfolio(Request $request)
 {
-    if (!$request->file('myPortfolio')) {
+    // 检查是否上传了文件
+    if (!$request->hasFile('myPortfolio')) {
         return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
     }
 
-    $file = $request->file('myPortfolio');
+    $files = $request->file('myPortfolio');
     $userID = $request->myUserID;
-    // $filesArray = [];
-    $fileUrls = []; // 創建一個空的陣列來存放檔案 URL
+    $filesNameArray = [];
 
-    foreach ($file as $uploadedFile) {
-        $fileName = $uploadedFile->getClientOriginalName();
-        $newFileName = time() . '_' . $fileName;
+    // 处理文件上传到S3和文件名数组
+    foreach ($files as $file) {
+        $fileName = $file->getClientOriginalName();
+        $filesNameArray[] = $fileName; // 存儲文件名
 
-        Storage::disk('s3')->put($newFileName, file_get_contents($uploadedFile), 'public');
-
-        $fileUrl = Storage::disk('s3')->url($newFileName);
-
-        $filesArray[] = $fileUrl;
-        $filesNameArray[] = $fileName; // 將檔案名稱加入到 $filesNameArray 中
-        $fileUrls[] = $fileUrl; // 將檔案 URL 加入到 $fileUrls 陣列中
+        // 上傳文件到S3
+        $s3FilePath = Storage::disk('s3')->put('pieceofcases/' . $fileName, file_get_contents($file), 'public');
     }
 
-    $filesNameArray = array_map(function ($fileUrl) {
-        return pathinfo($fileUrl)['basename'];
-    }, $filesArray);
+    // 將文件名數組轉換JSON字符串已存儲到數據庫
+    $filesJson = json_encode($filesNameArray);
 
-    $allFileUrls = implode(',', $filesArray);
-    $result = DB::select("CALL newPortfolio($userID, '$allFileUrls')")[0]->result;
+    // 执行数据库存储过程
+    $result = DB::select("CALL newPortfolio($userID, ?)", [$filesJson])[0]->result;
+
+    // 从数据库获取文件名
+    $filesName = DB::select("SELECT portfolio FROM myresume WHERE userID = $userID")[0]->portfolio;
+    $filesArray = explode(',', $filesName);
+
+    $filesObject = [];
+    foreach ($filesArray as $fileName) {
+        // 从S3获取文件内容并进行编码
+        $fileContent = Storage::disk('s3')->get('pieceofcases/' . $fileName);
+        $encodedContent = base64_encode($fileContent);
+        $filesObject[] = $encodedContent;
+    }
 
     return response()->json([
-        'result' => $result,
-        'files' => $filesArray,
-        'fileName' => $filesNameArray,
-        'fileUrls' => $fileUrls // 將檔案 URL 陣列加入回傳的 JSON 響應中
+        'result' => $result, 
+        'files' => $filesObject, 
+        'fileName' => $filesJson // 返回文件名数组的 JSON 字符串
     ]);
+}
 
 
 
-   
+// 取出檔案
+public function getPortfolio(Request $request){
+
+    $fileName = $request['fileName'];
+    try {
+        $objectUrl = Storage::disk('s3')->url('pieceofcases/' . $fileName);
+        return response()->json(['dataUrl' => $objectUrl]);
+    } catch (\Exception $e) {
+        return response('Error fetching file from S3', 500);
+    }
+}
 
 
-    
-
-    // 顯示作品集
-//     public function getFileFromS3($filename)
+// 取出檔案
+// public function getImage($fileName)
 // {
-//     $fileUrl = Storage::disk('s3')->url($filename);
-//     return redirect($fileUrl);
+//     try {
+//         $decodedFileName = urldecode($fileName);
+//         $objectUrl = Storage::disk('s3')->url('pieceofcases/' . $decodedFileName);
+//         return response()->json(['dataUrl' => $objectUrl]);
+//     } catch (\Exception $e) {
+//         return response('Error fetching file from S3', 500);
+//     }
 // }
+
+
+    // 取出檔案
+    // public function getImage($fileName)
+    // {
+    //     try {
+    //         $objectUrl = Storage::disk('s3')->url('pieceofcases/' . $fileName);
+    //         return response()->json(['dataUrl' => $objectUrl]);
+    //     } catch (\Exception $e) {
+    //         return response('Error fetching file from S3', 500);
+    //     }
+    // }
+
+  
 
 
 

@@ -3,6 +3,7 @@ import axios from "axios"; // 引入 axios 工具
 // 後端給的網址
 const API_URL =
   "http://localhost/Full-Stack-Project/server/public/index.php/api";
+  // "http://localhost/Full-Stack-Project/server/public/api";
 // "https://4f5a-2001-b011-9807-59a3-714d-fb29-35af-f071.ngrok-free.app/public/index.php/api";
 
 class Auth {
@@ -45,6 +46,10 @@ class Auth {
     // 現在要取得資料所以要用 【get】
     // 利用網址參數傳遞給後端
     return axios.get(API_URL + `/auth/login/${email}`);
+  }
+
+  keyword(keyword) {
+    return axios.get(API_URL + `/currentevent`);
   }
 
   //帳戶資料
@@ -114,6 +119,34 @@ class Auth {
       }
     );
   }
+
+  // 顯示作品集
+  // getPortfolio(myUserID, fileName) {
+  //   return axios.get(
+  //     API_URL + "/get-portfolio/{fileName}",
+  //     {
+  //       myUserID,
+  //       fileName,
+  //     },
+  //     {
+  //       headers: {
+  //         "Content-Type": "multipart/form-data",
+  //       },
+  //     }
+  //   );
+  // }
+
+
+  // 顯示作品集
+  getPortfolio(myUserID,fileName) {
+    return axios.get(
+      API_URL + `/get-portfolio/${fileName}`, 
+      {
+        myUserID,
+        fileName,
+      });
+  }
+
 
   //修改擅長工具
   updateSkills(myUserID, mySkills) {
@@ -217,7 +250,7 @@ class Auth {
       },
     });
   }
-  
+
   //忘記密碼傳送Email
   forgetPwd(changeEmail) {
     return axios.get(API_URL + "/Forgetpwd", {
@@ -243,47 +276,42 @@ class Auth {
         password,
         verCode,
       },
-    }); 
+    });
   }
 
   //google登入
   googleLogin(userName, email, photoURL) {
     return axios.post(API_URL + "/googleLogin", {
-      userName, 
-      email, 
+      userName,
+      email,
       photoURL,
     });
   }
 
   // 進到我的收藏
   enterFavorite(userID, page) {
-    return axios.post(API_URL + '/enterFavorite', {
+    return axios.post(API_URL + "/enterFavorite", {
       userID,
       page,
     });
   }
 
-  // icon狀態   + '/collectionState' 
-  collectionState(userID,caseID) {
+  // icon狀態   + '/collectionState'
+  collectionState(userID, caseID) {
     // const data ={
     //    userID,
     //    caseID
     // }
-    // return axios.post('http://localhost/Full-Stack-Project/server/public/api/collectionState ',data 
+    // return axios.post('http://localhost/Full-Stack-Project/server/public/api/collectionState ',data
     // {
     // myuserID,
     //   mycaseID,
     // }
-    return axios.post(API_URL + '/collectionState', {
+    return axios.post(API_URL + "/collectionState", {
       userID,
       caseID,
     });
   }
-
-
-
-
-
 }
 
 // new 一個 Auth 的實例 ，export default 默認導出 供其他程式直接引用

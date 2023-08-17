@@ -7317,6 +7317,7 @@
         },
         {
             "name": "nikic/php-parser",
+<<<<<<< Updated upstream
             "version": "v4.17.1",
             "source": {
                 "type": "git",
@@ -7327,6 +7328,18 @@
                 "type": "zip",
                 "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/a6303e50c90c355c7eeee2c4a8b27fe8dc8fef1d",
                 "reference": "a6303e50c90c355c7eeee2c4a8b27fe8dc8fef1d",
+=======
+            "version": "v4.16.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "19526a33fb561ef417e822e85f08a00db4059c17"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/19526a33fb561ef417e822e85f08a00db4059c17",
+                "reference": "19526a33fb561ef417e822e85f08a00db4059c17",
+>>>>>>> Stashed changes
                 "shasum": ""
             },
             "require": {

@@ -30,9 +30,13 @@ Route::post('update-email/{myuserID}/{myemail}', [InformationController::class, 
 Route::post('update-portfolio/{myuserID}/{myportfolio}', [InformationController::class, 'updatePortfolio']);
 //修改學經歷
 Route::post('update-education', [InformationController::class, 'updateExperience']);
+
+
 //修改作品集
 Route::post('update-portfolio', [InformationController::class, 'updatePortfolio']);
 //顯示作品集
+Route::get('get-portfolio/{fileName}', [InformationController::class, 'getPortfolio']);
+
 
 //修改擅長工具
 Route::post('update-skills', [InformationController::class, 'updateSkills']);
@@ -101,6 +105,11 @@ Route::post('/payment/pay', [PaymentController::class, 'checkout']); // 將資�
 Route::post('/payment/collaboration', [PaymentController::class, 'collaboration']); //* 合作
 Route::post('/payment/callback', [PaymentController::class, 'callback']); // 取得 ECPay 的回傳資料
 
+// 進入我的收藏
+Route::post('/enterFavorite', [CasesController::class, 'collectionList']);
+// icon收藏狀態
+Route::post('/collectionState', [CasesController::class, 'createCollection']);
+
 //後台
 Route::get('backstage/alluser', [backstageController::class, 'rootCheckUser']); //去backstageController叫function rootCheckUserphp
 Route::get('backstage/allcase', [backstageController::class, 'rootCheckCase']);
@@ -124,3 +133,8 @@ Route::post('googleLogin',[UserController::class, 'googleLogin']);
 Route::post('/enterFavorite', [CasesController::class, 'collectionList']);
 // icon收藏狀態
 Route::post('/collectionState', [CasesController::class, 'createCollection']);
+//即時搜尋
+// Route::get('currentevent', [CasesController::class, 'search']);
+//即時搜尋
+
+Route::get('/search', [CasesController::class, 'search']);
