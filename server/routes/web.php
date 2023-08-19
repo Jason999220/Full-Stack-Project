@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('welcome');
 });
+
+
+Route::get('/check-redis-connection', [CasesController::class, 'checkConnection']);
+Route::get('/get-value-from-redis/{key}', [CasesController::class, 'getValueFromRedis']);

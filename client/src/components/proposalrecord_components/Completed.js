@@ -38,7 +38,7 @@ function Completed(props) {
           </div>
         ))
       ) : (
-        <h1>尚未完成案件</h1>
+        <h1 className="noData">尚未完成案件</h1>
       )}
     </div>
   );

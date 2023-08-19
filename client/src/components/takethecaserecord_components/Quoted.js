@@ -39,7 +39,7 @@ function Quoted(props) {
           </div>
         ))
       ) : (
-        <h1>尚未報價</h1>
+        <h1 className="noData">尚未報價</h1>
       )}
     </div>
   );

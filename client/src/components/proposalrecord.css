@@ -69,3 +69,8 @@
 .recordDiv2:hover > a {
   color: #eee;
 }
+
+.noData {
+  margin-top: 3rem;
+  margin-left: 3rem;
+}

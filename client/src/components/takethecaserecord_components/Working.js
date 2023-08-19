@@ -81,10 +81,10 @@ function Working(props) {
   const [alert1, setAlert1] = useState(0);
   const handleStepConfirm = (caseID, deadLine) => {
     if (alert1 === 0) {
-      window.confirm("是否確定達成？ (等待案主確認)");
+      window.confirm("是否確定達成？ (等待案主確認領收)");
       setAlert1(!alert1);
     }
-    if (window.confirm("是否確定達成？ (等待案主確認)") == true) {
+    if (window.confirm("是否確定達成？ (等待案主確認領收)") == true) {
       Auth.stepConfirm(localStorage.getItem("userID"), caseID, deadLine)
         .then((result) => {
           console.log(result);
@@ -106,7 +106,7 @@ function Working(props) {
             className="progCircle"
             style={{ backgroundColor: "#4798b3" }}
           ></div>
-          <div className="deadLine">
+          <div className="deadLine" style={{ fontSize: ".9rem" }}>
             {i === 0 ? "成交日期" : "截止日期"}：
             {caseProgress[caseID][i]["stepDeadline"]}
           </div>
@@ -121,6 +121,10 @@ function Working(props) {
             }}
           >
             {caseProgress[caseID][i]["moneyStatus"]}
+          </div>
+          <div className="caseMoney">
+            階段金額：
+            {caseProgress[caseID][i]["money"]}
           </div>
         </div>
       );
@@ -150,7 +154,7 @@ function Working(props) {
             style={{ backgroundColor: "#b8b8b8" }}
           ></div>
 
-          <div className="deadLine">
+          <div className="deadLine" style={{ fontSize: ".9rem" }}>
             截止日期：
             {
               caseProgress[caseID][i + caseProgress[caseID][0]["caseSchedule"]][
@@ -174,6 +178,14 @@ function Working(props) {
             {
               caseProgress[caseID][i + caseProgress[caseID][0]["caseSchedule"]][
                 "moneyStatus"
+              ]
+            }
+          </div>
+          <div className="caseMoney">
+            階段金額：
+            {
+              caseProgress[caseID][i + caseProgress[caseID][0]["caseSchedule"]][
+                "money"
               ]
             }
           </div>
@@ -308,7 +320,7 @@ function Working(props) {
           </div>
         ))
       ) : (
-        <h1>尚未進行案件</h1>
+        <h1 className="noData">尚未進行案件</h1>
       )}
     </div>
   );

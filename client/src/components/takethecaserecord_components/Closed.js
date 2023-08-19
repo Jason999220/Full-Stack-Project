@@ -43,7 +43,7 @@ function Closed(props) {
           </div>
         ))
       ) : (
-        <h1>尚未結案</h1>
+        <h1 className="noData">尚未結案</h1>
       )}
     </div>
   );

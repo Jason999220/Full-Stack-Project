@@ -44,12 +44,14 @@ function Home() {
         <div className="d-flex justify-content-evenly homeText">
           <Link to="/proposal" className="d-block">
             <div className="frameBox">
-              <div className="get-case case-box">提案</div>
+              <div className="caseWord">提案</div>
+              <div className="get-case case-box"></div>
             </div>
           </Link>
           <Link to="/allCase">
             <div className="frameBox">
-              <div className="send-case case-box">接案</div>
+              <div className="caseWord">接案</div>
+              <div className="send-case case-box"></div>
             </div>
           </Link>
         </div>

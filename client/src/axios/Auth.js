@@ -312,6 +312,27 @@ class Auth {
       caseID,
     });
   }
+
+  getsearch(Keyword){
+    return axios.get(API_URL + "/getsearch", {
+      Keyword,
+    })
+  }
+
+
+  autocomplete(newTerm) {
+    return axios.get(API_URL + "/autocomplete", {
+      params: { newTerm } // 使用 params 来传递查询参数
+    });
+  }
+  
+
+
+
+  
+  
+
+
 }
 
 // new 一個 Auth 的實例 ，export default 默認導出 供其他程式直接引用

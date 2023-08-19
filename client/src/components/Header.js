@@ -9,6 +9,9 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import presetHeadPhoto from "../imgs/head.png";
 import { FaSearch } from "react-icons/fa";
+// import { FaSearch, FaTimes } from "react-icons/fa";
+
+import axios from "axios";
 
 function Header() {
   const {
@@ -67,18 +70,91 @@ function Header() {
   console.log(headphoto);
   // console.log(JSON.stringify(localStorage.getItem("userInfo")));
 
+  // ??????????????????????????????????????????????????????????????
+
+  const [searchVisible, setSearchVisible] = useState(false);
   const [searchKeyword, setSearchKeyword] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [showHistory, setShowHistory] = useState(false); // 新增的狀態
+  const [searchHistory, setSearchHistory] = useState([]); // 儲存歷史紀錄
 
-  const handleSearch = async () => {
-    try {
-      const response = await Auth.keyword(searchKeyword);
-      setSearchResults(response.data);
-    } catch (error) {
-      console.error("Error fetching search results:", error);
-    }
+  // 點擊icon時跳出搜尋框
+  const handleIconClick = () => {
+    setSearchVisible(true);
+    // setShowHistory(true); // 点击图标时显示历史记录
+  };
+  // 打叉按鈕
+  const handleClearSearch = () => {
+    setSearchKeyword("");
+    setSearchResults([]);
+    setSearchVisible(false);
   };
 
+  // useEffect(() => {
+  //   // 在组件加载时，获取历史搜索记录
+  //   handleSearchInputChange();
+  // }, []);
+
+  // 处理点击搜索框的函数，显示历史记录
+  // const handleInputClick = () => {
+  //   setShowDropdown(!showDropdown); // 切换下拉菜单的显示状态
+  // };
+
+  // const handleSearchInputChange = async (event) => {
+  //   const keyword = event.target.value; // 获取输入的关键字
+  //   setSearchKeyword(keyword); // 设置搜索关键字
+
+  //   if (keyword.trim() === "") {
+  //     setShowDropdown(true); // 显示下拉菜单
+  //     setSearchResults([]); // 清空搜索结果
+  //   } else {
+  //     setShowDropdown(false); // 隐藏下拉菜单
+
+  //     try {
+  //       const response = await axios.get('http://localhost/Full-Stack-Project/server/public/api/get-search-history');
+  //       const searchHistory = response.data; // 这里的 data 应该是搜索历史数据的数组
+  //       // 处理搜索历史数据，可能需要根据后端返回的数据结构进行适当的处理
+  //       setSearchHistory(searchHistory); // 设置搜索历史数据
+  //     } catch (error) {
+  //       console.error("获取搜索历史出错：", error);
+  //     }
+
+  //     setSearchResults(await handleSearch(keyword)); // 获取并设置搜索结果
+  //   }
+  // };
+
+  // 定义handleSearch函数来执行实际搜索
+  // const handleSearch = async (keyword) => {
+  //   try {
+  //     const response = await axios.get(`api/search?q=${keyword}`);
+  //     return response.data; // 返回搜索结果
+  //   } catch (error) {
+  //     console.error("搜索出错：", error);
+  //     return []; // 在出错的情况下返回空数组
+  //   }
+  // };
+
+  // // 輸入文字時
+  // const handleSearchInputChange = async () => {
+  //   if (searchKeyword.trim() === "") {
+  //     setShowDropdown(true); // 显示下拉菜单
+  //     setSearchResults([]); // 清空搜索结果
+  //   } else {
+  //     setShowDropdown(false); // 隐藏下拉菜单
+
+  //     try {
+  //       const response = await Auth.getSearch(searchKeyword); // 调用自定义的 getSearch 方法
+  //       setSearchResults(response.data); // 设置搜索结果为后端返回的数据
+  //       setShowDropdown(true); // 显示下拉菜单，因为有搜索结果了
+  //     } catch (error) {
+  //       console.error("搜索出错：", error);
+  //     }
+  //   }
+  // };
+  // ??????????????????????????????????????????????????????????????
+  
+
+  // console.log(headphoto);
   return (
     <div className="header">
       <div className="h50 d-flex my-auto align-items-center navbar-expand-lg navbar-light fW">
@@ -113,26 +189,27 @@ function Header() {
                 接案
               </Link>
             </li>
-            {/* <div className="search-icon-container">
-              <FaSearch
-                className="search-icon"
-                size={24}
-                onClick={handleSearch} // 在图标上添加点击事件
-              />
-            </div> */}
+
             <li class="nav-item dFlex">
+              {/* <li className="nav-item d-flex align-items-center"> */}
               {userinfo ? (
                 <div className="d-flex align-items-center">
-                  {" "}
-                  {/* 用户登录的 div */}
-                  <div className="search-icon-container mr-3">
+                  <div className="search-icon-container">
                     <FaSearch
                       className="search-icon"
                       size={24}
-                      onClick={handleSearch}
+                      onClick={handleIconClick}
                     />
                   </div>
-                  //
+
+                  
+
+
+
+
+
+                  
+
                   <div className="dropdown ms-auto">
                     <Link
                       to="#"

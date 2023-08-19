@@ -81,7 +81,7 @@ function Publishing(props) {
           </div>
         ))
       ) : (
-        <h1>尚未刊登案件</h1>
+        <h1 className="noData">尚未刊登案件</h1>
       )}
     </div>
   );

@@ -121,11 +121,15 @@ return [
 
     'redis' => [
 
-        'client' => env('REDIS_CLIENT', 'phpredis'),
+        'client' => env('REDIS_CLIENT', 'predis'),
 
         'options' => [
             'cluster' => env('REDIS_CLUSTER', 'redis'),
             'prefix' => env('REDIS_PREFIX', Str::slug(env('APP_NAME', 'laravel'), '_').'_database_'),
+            // 'options' => [
+            //     \Predis\Client::OPTION_SERIALIZER => \Predis\Serializer\SerializerInterface::PHP,
+            //     \Predis\Client::OPTION_CHARSET => 'utf-8',
+            // ],
         ],
 
         'default' => [

@@ -43,7 +43,7 @@ function Draft(props) {
           </div>
         ))
       ) : (
-        <h1>尚未有草稿</h1>
+        <h1 className="noData">尚未有草稿</h1>
       )}
     </div>
   );

@@ -40,7 +40,7 @@ function Removed(props) {
           </div>
         ))
       ) : (
-        <h1>尚未下架</h1>
+        <h1 className="noData">尚未下架</h1>
       )}
     </div>
   );

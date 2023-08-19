@@ -85,7 +85,13 @@
 .googleButton {
   display: block;
   margin: 0 auto;
-  background-color: #f50808;
-  color: white;
+  border: 1px solid rgb(183, 185, 185);
+  background-color: #ffffff;
+  color: rgb(25, 25, 26);
   margin-top: 1rem;
+  font-weight: 600;
+}
+
+.googleLogo{
+  color: rgb(0, 85, 255);
 }

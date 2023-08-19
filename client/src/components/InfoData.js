@@ -370,7 +370,7 @@ function InfoData() {
 
   return (
     <div className="infoDataDiv d-flex infoData">
-      <div className="headPhotoDiv">
+      <span className="headPhotoDiv">
         <img
           id="infoImg"
           style={{ objectFit: "cover" }}
@@ -447,7 +447,7 @@ function InfoData() {
             </div>
           </div>
         </div>
-      </div>
+      </span>
       <div className="infoDataDiv2">
         <div>
           <span className="p1">{name}</span>

@@ -89,6 +89,7 @@ function CaseContent(props) {
             />
           ) : (
             <img
+            className="case-content-img"
               src={`data:${fileType(item)};base64, ${item}`}
               width={"200"}
               alt="img"
@@ -96,6 +97,7 @@ function CaseContent(props) {
           )}
         </div>
       ))}
+      
       </div>
       
     </div>

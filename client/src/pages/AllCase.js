@@ -111,9 +111,15 @@ function AllCase() {
                     }}
                   >
                     {/* 依母類別的預設圖 */}
+
+{/*  */}
+{/*  */}
+{/*  */}
+{/*  */}
                     {item.image !== null ? (
                       <img
-                        src={`data:image/jpeg;base64, ${item.image}`} // 加上標頭
+                        // src={`data:image/jpeg;base64, ${item.image}`} // 加上標頭
+                        src={item.image} // 加上標頭
                         alt="img"
                         className="mb-3"
                       />
@@ -124,6 +130,11 @@ function AllCase() {
                     ) : (
                       <img src={bookIamge} alt="img" className="mb-3" />
                     )}
+
+{/*  */}
+{/*  */}
+{/*  */}
+{/*  */}
                     <p>案件標題 : {item.caseName}</p>
                     {item.city && (
                       <p>

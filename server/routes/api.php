@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Redis;
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
@@ -133,8 +134,47 @@ Route::post('googleLogin',[UserController::class, 'googleLogin']);
 Route::post('/enterFavorite', [CasesController::class, 'collectionList']);
 // icon收藏狀態
 Route::post('/collectionState', [CasesController::class, 'createCollection']);
-//即時搜尋
-// Route::get('currentevent', [CasesController::class, 'search']);
-//即時搜尋
 
+//存取歷史紀錄
+Route::post('storeSearch', [CasesController::class, 'storeSearch']);
+Route::get('getSearchHistory', [CasesController::class, 'getSearchHistory']);
+
+
+//即時搜尋
 Route::get('/search', [CasesController::class, 'search']);
+
+
+
+//顯示歷史紀錄
+Route::get('/get-search-history', [CasesController::class, 'getSearchHistory']);
+
+//搜尋案件名
+Route::get('/get-search', [CasesController::class, 'searchCases']);
+
+
+
+
+Route::get('/test-script', 'App\Http\Controllers\TestController@test');
+
+
+Route::get('/test-redis-connection', function () {
+    $redis = Redis::connection();
+    $info = $redis->info();
+
+    dd($info);
+});
+
+
+
+Route::get('/check-redis-connection', function () {
+    // 判断 Redis 连接是否正常
+    if (Redis::ping()) {
+        return "Connected to Redis!";
+    } else {
+        return "Unable to connect to Redis.";
+    }
+});
+
+
+Route::get('/autocomplete', [CasesController::class, 'autocomplete']);
+

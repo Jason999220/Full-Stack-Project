@@ -183,6 +183,36 @@ class InformationController extends Controller
     // {
     // if (!$request->hasFile('myPortfolio')) {
     //     return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
+    //     if (!$request->file('myPortfolio')) {
+    //         return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
+    //     }
+
+    //     $file = $request->file('myPortfolio');
+    //     $userID = $request->myUserID;
+    //     $filesArray = [];
+
+    //     foreach ($file as $uploadedFile) {
+    //         $fileName = $uploadedFile->getClientOriginalName();
+    //         $newFileName = time() . '_' . $fileName;
+
+    //         Storage::disk('s3')->put($newFileName, file_get_contents($uploadedFile), 'public');
+
+    //         $fileUrl = Storage::disk('s3')->url($newFileName);
+
+    //         $filesArray[] = $fileUrl;
+
+    //         $filesNameArray[] = $fileName; // 將檔案名稱加入到 $filesNameArray 中
+
+    //     }
+
+    //     $filesNameArray = array_map(function ($fileUrl) {
+    //         return pathinfo($fileUrl)['basename'];
+    //     }, $filesArray);
+
+    //     $allFileUrls = implode(',', $filesArray);
+    //     $result = DB::select("CALL newPortfolio($userID, '$allFileUrls')")[0]->result;
+
+    //     return response()->json(['result' => $result, 'files' => $filesArray, 'fileName' => $filesNameArray, 'fileUrls' => $fileUrls]);
     // }
 
     // $files = $request->file('myPortfolio');
@@ -325,8 +355,10 @@ public function getPortfolio(Request $request){
 }
 
 
-// 取出檔案
-// public function getImage($fileName)
+
+
+    // 顯示作品集
+//     public function getFileFromS3($filename)
 // {
 //     try {
 //         $decodedFileName = urldecode($fileName);
@@ -448,8 +480,9 @@ public function getPortfolio(Request $request){
         $userID = $request['userID'];
         $caseID = $request['caseID'];
         $deadLine= $request['deadLine'];
-        // return $deadLine;
+        // return $caseID;
         $result = DB::select('Call stepConfirm(?, ?, ?)', [$userID, $caseID, $deadLine]);
+        // return '123';
         return $result;
     }
 
