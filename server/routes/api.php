@@ -34,7 +34,7 @@ Route::post('update-education', [InformationController::class, 'updateExperience
 
 
 //修改作品集
-Route::post('update-portfolio', [InformationController::class, 'updatePortfolio']);
+Route::post('updateportfolio', [InformationController::class, 'updatePortfolio']);
 //顯示作品集
 Route::get('get-portfolio/{fileName}', [InformationController::class, 'getPortfolio']);
 

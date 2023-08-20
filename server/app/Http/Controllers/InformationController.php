@@ -297,7 +297,7 @@ class InformationController extends Controller
 
 public function updatePortfolio(Request $request)
 {
-    // 检查是否上传了文件
+    // 檢查是否上傳文件
     if (!$request->hasFile('myPortfolio')) {
         return response()->json(['result' => '未選擇檔案', 'files' => [], 'fileName' => []]);
     }

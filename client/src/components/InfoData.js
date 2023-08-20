@@ -260,6 +260,9 @@ function InfoData() {
     return "application/octet-stream";
   };
 
+  
+  
+
   //  顯示作品集
   const handleFileClick = async (event, fileName) => {
     // const fileName = fileNames[index]; // 根據索引取得檔案名稱
@@ -272,15 +275,21 @@ function InfoData() {
       );
       const data = response.data;
       const fileUrl = data.dataUrl;
+      console.log("Response from backend:", response); // 添加此行
+      console.log("Data from backend:", data); // 添加此行
 
       if (fileType(fileName) === "application/pdf") {
         window.open(fileUrl, "_blank"); // 在新分頁打開PDF
       } else {
         setModalContent(<img src={fileUrl} alt="作品集" />);
+        console.log("Modal Content:", modalContent); // 输出 modalContent 的内容到控制台
+
         setShowModal(true);
+        console.log("Show Modal:", showModal); // 確認 showModal 是否被設置為 true
+
       }
     } catch (error) {
-      console.error(error);
+      console.error("Error in handleFileClick:", error);
     }
   };
 
@@ -807,19 +816,72 @@ function InfoData() {
           <hr />
           <div className="infoDiv2">
             <label htmlFor="" className="p2 flexGrow1">
+              擅長工具
+            </label>
+            <span className="flexGrow2">{tools}</span>
+            <button
+              className="float-right flexGrow3"
+              data-bs-toggle="modal"
+              data-bs-target="#changeSkills"
+            >
+              修改
+            </button>
+            <div
+              className="modal fade"
+              id="changeSkills"
+              data-bs-backdrop="static"
+              data-bs-keyboard="false"
+              tabIndex="-1"
+              aria-labelledby="staticBackdropLabel"
+              aria-hidden="true"
+            >
+              <div className="modal-dialog modal-dialog-centered">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <span className="spanCenter">修改擅長工具</span>
+                    <button
+                      type="button"
+                      className="btn-close mx-0"
+                      data-bs-dismiss="modal"
+                      aria-label="Close"
+                    ></button>
+                  </div>
+                  <div className="modal-body">
+                    <div className="my-3">
+                      <label htmlFor="avatar1">請輸入擅長工具：</label>
+                      <input
+                        type="text"
+                        id="avatar1"
+                        name="avatar"
+                        className="inputText"
+                        defaultValue={tools}
+                        required
+                        onChange={(e) => {
+                          setChangeSkills(e.target.value);
+                        }}
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      className="btn btn-primary mx-auto d-block"
+                      data-bs-dismiss="modal"
+                      style={{ marginTop: "24px" }}
+                      onClick={handleChangeSkills}
+                    >
+                      修改
+                    </button>
+                  </div>
+                  <div className="modal-footer"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+
+          <div className="infoDiv2">
+            <label htmlFor="" className="p2 flexGrow1">
               作品集
             </label>
-            {/* <span className="portfolio flexGrow2">
-              {portfolio.map((file, index) => (
-                <a
-                  href={`data:${fileType(file)};base64, ${file}`}
-                  key={index}
-                  download={fileName[index]}
-                >
-                  {fileName[index]}
-                </a>
-              ))}
-            </span> */}
             <span className="portfolio flexGrow2">
               {fileNames &&
                 Array.isArray(fileNames) &&
@@ -827,7 +889,8 @@ function InfoData() {
                   <div key={index}>
                     <a
                       key={name}
-                      href={name} // 使用 name 而不是 fileName
+                      href="#" // 修改此处为 "#"
+                      // href={name} // 使用 name 而不是 fileName
                       target={
                         fileType(name) === "application/pdf" ? "_blank" : ""
                       }
@@ -842,30 +905,6 @@ function InfoData() {
                   </div>
                 ))}
             </span>
-
-            {/* Modal to display content */}
-            {showModal && (
-              <div className="modal">
-                <div className="modal-dialog">
-                  <div className="modal-content">
-                    <div className="modal-header">
-                      <button
-                        type="button"
-                        className="close"
-                        onClick={() => {
-                          setShowModal(false);
-                          setModalContent(null);
-                        }}
-                      >
-                        &times;
-                      </button>
-                    </div>
-                    <div className="modal-body">{modalContent}</div>
-                  </div>
-                </div>
-              </div>
-            )}
-
             <button
               className="float-right flexGrow3"
               data-bs-toggle="modal"
@@ -929,34 +968,6 @@ function InfoData() {
                           }
                         }}
                       />
-                      {/*  */}
-                      {/*  */}
-                      {showModal && (
-                        <div
-                          className="modal fade show"
-                          tabIndex="-1"
-                          style={{ display: "block" }}
-                        >
-                          <div className="modal-dialog">
-                            <div className="modal-content">
-                              <div className="modal-header">
-                                <button
-                                  type="button"
-                                  className="btn-close"
-                                  data-bs-dismiss="modal"
-                                  onClick={() => {
-                                    setShowModal(false);
-                                    setModalContent(null);
-                                  }}
-                                ></button>
-                              </div>
-                              <div className="modal-body">{modalContent}</div>
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                      {/*  */}
-                      {/*  */}
                     </div>
                     <button
                       type="submit"
@@ -972,71 +983,35 @@ function InfoData() {
                   <div className="modal-footer"></div>
                 </div>
               </div>
-            </div>
-          </div>
-          <hr />
-          <div className="infoDiv2">
-            <label htmlFor="" className="p2 flexGrow1">
-              擅長工具
-            </label>
-            <span className="flexGrow2">{tools}</span>
-            <button
-              className="float-right flexGrow3"
-              data-bs-toggle="modal"
-              data-bs-target="#changeSkills"
-            >
-              修改
-            </button>
-            <div
-              className="modal fade"
-              id="changeSkills"
-              data-bs-backdrop="static"
-              data-bs-keyboard="false"
-              tabIndex="-1"
-              aria-labelledby="staticBackdropLabel"
-              aria-hidden="true"
-            >
-              <div className="modal-dialog modal-dialog-centered">
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <span className="spanCenter">修改擅長工具</span>
-                    <button
-                      type="button"
-                      className="btn-close mx-0"
-                      data-bs-dismiss="modal"
-                      aria-label="Close"
-                    ></button>
-                  </div>
-                  <div className="modal-body">
-                    <div className="my-3">
-                      <label htmlFor="avatar1">請輸入擅長工具：</label>
-                      <input
-                        type="text"
-                        id="avatar1"
-                        name="avatar"
-                        className="inputText"
-                        defaultValue={tools}
-                        required
-                        onChange={(e) => {
-                          setChangeSkills(e.target.value);
-                        }}
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      className="btn btn-primary mx-auto d-block"
-                      data-bs-dismiss="modal"
-                      style={{ marginTop: "24px" }}
-                      onClick={handleChangeSkills}
+
+              {showModal && (
+                <div
+                  className="custom-modal"
+                  onClick={() => setShowModal(false)}
+                >
+                    <div
+                      className="modal-content"
+                      // onClick={(e) => e.stopPropagation()}
                     >
-                      修改
-                    </button>
-                  </div>
-                  <div className="modal-footer"></div>
+                      <div className="modal-header">
+                        <button
+                          type="button"
+                          className="close"
+                          onClick={() => {
+                            setShowModal(false);
+                            setModalContent(null);
+                          }}
+                        >
+                          &times;
+                        </button>
+                      </div>
+                      <div className="modal-body">{modalContent}</div>
+                    </div>
                 </div>
-              </div>
+              )}
             </div>
           </div>
+
           <div className="pos">
             <div className="p3 borderTop">自傳</div>
             <div>

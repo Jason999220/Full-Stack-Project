@@ -157,6 +157,17 @@ class CasesController extends Controller
         $caseID = (int)$request['caseID'];
         $userID = (int)$request['userID'];
         $name = $request['name'];
+        $category = $request['category'];
+        $subCategory = $request['subCategory'];
+        $budget = (int)$request['budget'];
+        $deadline = $request['deadline'];
+        $city = $request['city'];
+        $subCity = $request['subCity'];
+        $description = $request['description'];
+        $contactName = $request['contactName'];
+        $contactAble = (int)$request['contactAble'];
+        $contactPhone = $request['contactPhone'];
+        $contactTime = $request['contactTime'];
         $status = $request['status'];
         $Files = $request->file('allFiles');
         $allFileName = '';
@@ -239,6 +250,21 @@ class CasesController extends Controller
         $page = $request->input('page');
         $results = DB::select('CALL caseFilter(?,?,?,?,?)', [$bigClassID,$classID,$cityID,$districtID,$page]);
         // return $results;
+
+        //* 假如圖片存在AWS S3
+        // $filesName = [];
+        // // 取出每個物件的 files 欄位資料
+        // for($i = 0; $i < count($results); $i++) {
+        //     array_push($filesName, $results[$i]->image);
+        // };
+        // // return $filesName;
+        // // 將其字串變為陣列
+        // for($i = 0; $i < count($filesName); $i++) {
+        //     $filesName[$i] = explode(',', $filesName[$i]);
+        // };
+
+
+        //* 假如圖片存在 storage
         $filesName = [];
         // 取出每個物件的 files 欄位資料
         for($i = 0; $i < count($results); $i++) {
@@ -255,11 +281,15 @@ class CasesController extends Controller
             // 假如一筆以上的資料，判斷有無【jpg】||【jpeg】檔
             if(count($filesName[$i]) > 1){
                 for($j = 0; $j < count($filesName[$i]); $j++) {
+                    //* 假如是AWS S3 就找https
+                    if(substr( $filesName[$i][$j],0,5) === 'https') {
+                        array_push($newFileArray,$filesName[$i][$j]);
+                        break;
+                    }
+                    //* 假如是本地端 就找檢查jpg，jpeg
                     if(strpos($filesName[$i][$j],'jpg')  !== false|| strpos($filesName[$i][$j],'jpeg')  !== false ){
                         array_push($newFileArray,$filesName[$i][$j]);
-                        if(count($newFileArray) === 1){
-                            break;
-                        }
+                        break;
                     }
                 }
                 if(count($newFileArray) === 0){
@@ -269,6 +299,11 @@ class CasesController extends Controller
 
             // 只有一筆資料，判斷有無【jpg】||【jpeg】檔
             if(count($filesName[$i]) === 1){
+                //* 假如是AWS S3 就找https
+                if(substr( $filesName[$i][0],0,5) === 'https') {
+                    array_push($newFileArray,$filesName[$i][0]);
+                    continue;
+                }
                 if(strpos($filesName[$i][0],'jpg')  !== false|| strpos($filesName[$i][0],'jpeg')  !== false){
                     // array_push($newFileArray,true);
                     array_push($newFileArray,$filesName[$i][0]);
@@ -277,18 +312,15 @@ class CasesController extends Controller
                 }
             }
         };
-        // $filesObject = [];
-        // for($i = 0; $i < count($newFileArray); $i++) {
-        //     if($newFileArray[$i] === null ){
-        //         $results[$i]->image = null;
-        //     }else{
-        //         // $results[$i]->image = base64_encode(Storage::get($newFileArray[$i]));// 一串長得很奇怪的亂碼
-        //         $results[$i]->image = base64_encode(Storage::get($newFileArray[$i]));// 一串長得很奇怪的亂碼
-        //         // array_push($filesObject,  $file); // 原本是想另外修改再丟到前端
-        //     }
-        //     return $results;
-        // }
+
+        //* 本地圖片取得storage 路徑，AWS S3 則直接回傳
         for($i = 0; $i < count($newFileArray); $i++) {
+            //* 假如是 S3
+            if(substr( $newFileArray[$i],0,5) === 'https') {
+                $results[$i]->image = $newFileArray[$i];
+                continue;
+            }
+            //* 假如是 本地
             if($newFileArray[$i] === null ){
                 // array_push($filesObject,  null);
                 $results[$i]->image = null;
@@ -314,12 +346,19 @@ class CasesController extends Controller
 
         $results = DB::select('CALL enterCase(?,?)',[$caseID, $userID]);
         // return $results;
-        // 處理檔案編碼
+        //* 處理檔案編碼
         $results[0]->image = explode(',', $results[0]->image);
+
         for($i = 0; $i < count($results[0]->image); $i++){
-            $results[0]->image[$i] = base64_encode(Storage::get($results[0]->image[$i]));
+            //* handle aws s3 file
+            if(substr( $results[0]->image[$i],0,5) === 'https') {
+                $results[0]->image[$i] = $results[0]->image[$i];
+            }else{
+             //* handle local storage file
+                $results[0]->image[$i] = base64_encode(Storage::get($results[0]->image[$i]));
+            }
         }
-        // 處理頭像編碼
+        //* 處理頭像編碼
         $results[0]->profilePhoto = base64_encode(Storage::get($results[0]->profilePhoto));
         return $results;
     }
@@ -614,14 +653,18 @@ public function autocomplete(Request $request)
 
 
     $caseNames = [
-        '水箱搬運',
         '水管爆掉',
-        '水管維修',
-        '水管配置',
+        // '水箱搬運',
+        // '水管維修',
+        '水電消防半技工',
+        '電路維修',
         '搬家人員',
         '搬家清潔',
         '國中數學',
         '國中理化',
+        '國二數學',
+        '折紙鶴',
+        '折蓮花',
         '國二數學',
 
         // ...加入其他案件名稱

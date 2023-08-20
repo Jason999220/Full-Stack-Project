@@ -107,7 +107,7 @@ class Auth {
   //修改作品集
   updatePortfolio(myUserID, myPortfolio) {
     return axios.post(
-      API_URL + "/update-portfolio",
+      API_URL + "/updateportfolio",
       {
         myUserID,
         myPortfolio,

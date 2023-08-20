@@ -10,8 +10,8 @@ import "react-toastify/dist/ReactToastify.css";
 import presetHeadPhoto from "../imgs/head.png";
 import { FaSearch } from "react-icons/fa";
 // import { FaSearch, FaTimes } from "react-icons/fa";
+// import { navigate } from 'react-router-dom'; // 导入路由库中的导航函数
 
-import axios from "axios";
 
 function Header() {
   const {
@@ -152,7 +152,44 @@ function Header() {
   //   }
   // };
   // ??????????????????????????????????????????????????????????????
-  
+  const [searchTerm, setSearchTerm] = useState("");
+  const [suggestions, setSuggestions] = useState([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+
+  useEffect(() => {
+    console.log("Suggestions state updated:", suggestions);
+  }, [suggestions]); // 当 suggestions 状态变化时触发 useEffect
+
+
+  const handleInputChange = async (event) => {
+    const newTerm = event.target.value;
+    setSearchTerm(newTerm);
+
+    if (newTerm.length > 0) {
+      try {
+        const response = await Auth.autocomplete(newTerm);
+        console.log("API response:", response.data);
+        console.log("Suggestions:", suggestions);
+        setSuggestions(response.data);
+        setShowDropdown(true); // 在有建议时显示下拉菜单
+
+      } catch (error) {
+        console.error("API request error:", error);
+      }
+    } else {
+      setSuggestions([]);
+      setShowDropdown(false); // 在没有输入时隐藏下拉菜单
+
+    }
+  };
+
+
+  const handleSuggestionClick = (suggestion) => {
+    setSearchTerm(suggestion); // 设置输入框的值为选项内容
+    setShowDropdown(false); // 关闭下拉菜单
+    setSuggestions([]); // 清空建议列表，以免下次打开时显示旧的建议
+  };
+
 
   // console.log(headphoto);
   return (
@@ -201,6 +238,49 @@ function Header() {
                       onClick={handleIconClick}
                     />
                   </div>
+                  {/* 遮罩跟搜尋框 */}
+                  {searchVisible && (
+                    <div className="overlay">
+                      <div className="search-container">
+                        <div
+                          className="search-close-button"
+                          onClick={handleClearSearch}
+                        >
+                          <span>&times;</span>
+                        </div>
+                        <input
+                          type="text"
+                          value={searchTerm}
+                          onChange={handleInputChange}
+                          placeholder="搜索案件名稱"
+                          onClick={() => setShowDropdown(true)}
+                        />
+
+                        {showDropdown && (
+                          <ul
+                            className="dropdown-menulist"
+                            aria-labelledby="dropdownMenuButton"
+                          >
+                            {suggestions.map((result, index) => (
+                              <li key={index}>
+                                <button
+                                  className="dropdown-item"
+                                  onClick={() => handleSuggestionClick(result)}
+                                  >
+                                  {result}{" "}
+                                  {/* 这里直接使用 result 作为选项内容 */}
+                                  {/* <Link to="/caseview/10" className="dropdown-item" onClick={() => handleSuggestionClick("水管爆掉")}>
+                                  </Link> */}
+
+                                </button>
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    </div>
+                  )}
+  
 
                   
 

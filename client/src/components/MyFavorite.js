@@ -81,9 +81,9 @@ return (
           <p>地點{item.city}</p>
           <p>預算{item.budget}</p>
           <p>預計完成日期{item.deadline}</p>
-          <Link className="moreView" to={"/caseview"}>
+          {/* <Link className="moreView" to={"/caseview"}>
             more view
-          </Link>
+          </Link> */}
           {/* 愛心 Icon */}
           <svg
             xmlns="http://www.w3.org/2000/svg"
